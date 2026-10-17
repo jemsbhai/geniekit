@@ -5,6 +5,14 @@ Keep a Changelog, and the project follows semantic versioning.
 
 ## [Unreleased]
 
+### Added
+- `geniekit.harmonize`: crosswalk (`resources/crosswalk.yaml`, 25 rules with
+  their basis in the data guides), `harmonize()` with a provenance report,
+  `stack()` with per-column cohort availability, derived `race_ethnicity`,
+  `pfs_time_origin` and NAACCR summary-stage code/label, and unification of
+  the two structural-variant formats and the copy-number matrix.
+- CLI commands `crosswalk` and `harmonize`.
+
 ## [0.0.1] - 2026-10-17
 
 First public release: the foundation modules.

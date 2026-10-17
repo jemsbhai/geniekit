@@ -30,7 +30,7 @@ follow in the next minor releases.
 | `geniekit.dictionary` | The six Variable Synopsis workbooks compiled into one data dictionary, with cross-cohort comparison helpers | done |
 | `geniekit.io` | Download from Synapse (personal access token, access-status check, MD5 verification) and load release folders from disk into one `CohortData` object | done |
 | `geniekit.synthetic` | Dictionary-driven synthetic cohorts: every declared column, cohort-specific naming, coherent simulated histories | done |
-| `geniekit.harmonize` | Crosswalk-driven normalisation of the six cohorts | planned |
+| `geniekit.harmonize` | Crosswalk-driven normalisation of the six cohorts (renames, code-list collapses, spelling, types, derived variables, genomic format unification) with a provenance report; stacking across cohorts | done; metastasis-site rederivation follows |
 | `geniekit.lot` | Line-of-therapy derivation with user-defined index events | planned |
 | `geniekit.aggregate` | Aggregate-only analyses with disclosure control | planned |
 
@@ -95,6 +95,54 @@ identifiers, intervals and outcomes, but their values are invented. They
 exist so that code can be written and tested before access is granted; never
 report numbers computed from them.
 
+Harmonising and stacking:
+
+```python
+from geniekit import io, harmonize
+
+nsclc = harmonize.harmonize(io.load_release("data/genie_bpc/NSCLC_v2.0-public"))
+nsclc.report.to_frame()            # every rename, recode, collapse, coercion and derivation, with counts
+nsclc.report.unmapped()            # values the crosswalk did not recognise (should be empty)
+
+stacked = harmonize.stack([nsclc, bladder, crc])   # one frame per table, cohort and schema_generation columns
+stacked["cancer_index"]["ca_cigarette"]           # generation-1 ca_lung_cigarette and generation-2 ca_cigarette, unified
+stacked.availability("cancer_index")               # which cohorts contributed each column
+```
+
+What the crosswalk does (`geniekit crosswalk --basis` prints the full list with
+the basis for each rule in the data guides):
+
+- renames generation-1 variables to the generation-2 name where the
+  definitions coincide (`ca_lung_cigarette`, `dmets_stage_i_iii`, and the
+  liver, breast and brain/CNS metastasis flags with their time intervals);
+- collapses the detailed generation-1 NAACCR ethnicity, race and sex code
+  lists onto the generation-2 categories, keeping the detailed value in a
+  `_detail` column;
+- reconciles cohort-specific level sets (`ca_heme_type`, `pfs_cohort`,
+  `bca_subtype`, tumor-deposit text) and spelling differences (dashes,
+  capitalisation, `<1` versus `< 1`);
+- converts `cpt_seq_date` to an integer year and `naaccr_seer_sum_stage` to
+  the NAACCR #759 code plus label in every cohort;
+- derives `race_ethnicity` for every cohort with one rule (the released
+  generation-1 value is kept for comparison) and `pfs_time_origin`, which
+  states whether the PFS endpoints run from diagnosis or from the first
+  distant metastasis;
+- unifies `data_fusions.txt` and `data_sv.txt` into one structural-variant
+  schema and melts the copy-number matrix into a long table.
+
+What it deliberately does not do: the remaining generation-1 metastasis
+regions (`dmets_abdomen`, `dmets_bone`, `dmets_extremity`,
+`dmets_head_neck`, `dmets_pelvis`, `dmets_thorax`) keep their names, because
+a code-by-code comparison of the classification appendices
+(`data-raw/build_metastasis_sites.py`) shows they do not coincide with any
+generation-2 site: generation-1 Abdomen includes the peritoneum, adrenals and
+intra-abdominal nodes; Thorax includes lung, pleura, pericardium, ribs and
+intrathoracic nodes; Pelvis includes pelvic nodes; Extremity is split across
+Skin, Other and Lymph nodes. Only liver, breast and brain/CNS (the latter up
+to one NOS code) have the same code set in both generations. The harmonised
+17-site set is rederived from the imaging and pathology site codes in a later
+step rather than approximated by renaming.
+
 Command line:
 
 ```powershell
@@ -105,6 +153,8 @@ geniekit dictionary presence --table patient --only-partial
 geniekit access                                   # token and GENIE approval status
 geniekit download CRC --dest data/genie_bpc       # after approval
 geniekit inspect data/genie_bpc/CRC_v2.0-public   # table summary and column check
+geniekit crosswalk --validate                     # the harmonisation rules, checked against the dictionary
+geniekit harmonize data\genie_bpc\NSCLC_v2.0-public data\genie_bpc\BLADDER_v1.0-public --out data\harmonized
 ```
 
 ## The six public releases

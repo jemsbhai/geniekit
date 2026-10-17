@@ -92,3 +92,27 @@ def test_access_and_download_with_stub(monkeypatch, tmp_path, capsys):
     )
     out = capsys.readouterr().out
     assert "release folder" in out and (tmp_path / "CRC_v2.0-public" / "manifest.json").exists()
+
+
+def test_crosswalk_command(capsys):
+    assert cli.main(["crosswalk", "--validate"]) == 0
+    out = capsys.readouterr().out
+    assert "cigarette-rename" in out and "validation: clean" in out
+    assert cli.main(["crosswalk", "--kind", "derive", "--basis"]) == 0
+    out = capsys.readouterr().out
+    assert "race-ethnicity-derived" in out and "cigarette-rename" not in out
+
+
+def test_harmonize_command(tmp_path, capsys):
+    from geniekit import synthetic
+
+    a = synthetic.generate("NSCLC", n_patients=8, seed=1).to_dir(tmp_path / "NSCLC_v2.0-public")
+    b = synthetic.generate("PANC", n_patients=8, seed=2).to_dir(tmp_path / "PANC_v1.0-public")
+    out = tmp_path / "out"
+    assert cli.main(["harmonize", str(a), "--out", str(out / "one")]) == 0
+    assert (out / "one" / "cancer_index.csv").exists() and (out / "one" / "harmonization_report.csv").exists()
+    assert cli.main(["harmonize", str(a), str(b), "--out", str(out / "two"), "--compress"]) == 0
+    text = capsys.readouterr().out
+    assert "StackedData" in text and (out / "two" / "patient.csv.gz").exists()
+    assert (out / "two" / "availability_cancer_index.csv").exists()
+    assert cli.main(["harmonize", str(tmp_path / "missing"), "--out", str(out)]) == 1

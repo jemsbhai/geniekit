@@ -1,7 +1,7 @@
 """Command line interface: ``geniekit <command> [options]``.
 
-Commands: ``releases``, ``dictionary``, ``access``, ``download``, ``inspect``.
-``harmonize``, ``lot`` and ``aggregate`` are added with their modules.
+Commands: ``releases``, ``dictionary``, ``access``, ``download``, ``inspect``,
+``crosswalk``, ``harmonize``. ``lot`` and ``aggregate`` are added with their modules.
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from collections.abc import Sequence
 
 import pandas as pd
 
-from . import dictionary, io, releases
+from . import dictionary, harmonize, io, releases
 from ._version import __version__
 
 
@@ -130,6 +130,63 @@ def cmd_inspect(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_crosswalk(args: argparse.Namespace) -> int:
+    cw = harmonize.load_crosswalk(args.file)
+    frame = cw.to_frame()
+    if args.kind:
+        frame = frame[frame["kind"].isin(args.kind)]
+    if not args.basis:
+        frame = frame.drop(columns=["basis"])
+    _print_frame(frame, max_rows=None)
+    print(f"\n{cw}")
+    if args.validate:
+        problems = cw.validate()
+        if problems:
+            print("validation problems:")
+            for problem in problems:
+                print(f"  - {problem}")
+            return 1
+        print("validation: clean")
+    return 0
+
+
+def cmd_harmonize(args: argparse.Namespace) -> int:
+    from pathlib import Path
+
+    loaded = []
+    for path in args.paths:
+        try:
+            loaded.append(io.load_release(path, genomic=not args.no_genomic))
+        except (FileNotFoundError, ValueError) as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    suffix = ".csv.gz" if args.compress else ".csv"
+    if len(loaded) == 1:
+        h = harmonize.harmonize(loaded[0], keep_original=args.keep_original)
+        print(h)
+        for name, frame in h.tables.items():
+            frame.to_csv(out_dir / f"{name}{suffix}", index=False)
+        report = h.report
+    else:
+        stacked = harmonize.stack(loaded)
+        print(stacked)
+        _print_frame(stacked.summary())
+        for name, frame in stacked.tables.items():
+            frame.to_csv(out_dir / f"{name}{suffix}", index=False)
+            stacked.availability(name).to_csv(out_dir / f"availability_{name}.csv")
+        report = stacked.report
+    report.to_frame().to_csv(out_dir / "harmonization_report.csv", index=False)
+    _print_frame(report.summary())
+    unmapped = report.unmapped()
+    if len(unmapped):
+        print(f"\n{len(unmapped)} variable(s) had values the crosswalk does not know:")
+        _print_frame(unmapped[["cohort", "table", "source", "detail"]])
+    print(f"\nwritten to {out_dir}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="geniekit", description=__doc__.splitlines()[0])
     p.add_argument("--version", action="version", version=f"geniekit {__version__}")
@@ -187,6 +244,23 @@ def build_parser() -> argparse.ArgumentParser:
     pi.add_argument("--version")
     pi.add_argument("--no-genomic", action="store_true", help="skip genomic files")
     pi.set_defaults(func=cmd_inspect)
+
+    pc = sub.add_parser("crosswalk", help="list the harmonisation rules")
+    pc.add_argument("--file", help="a custom crosswalk YAML (default: the packaged one)")
+    pc.add_argument(
+        "--kind", action="append", choices=list(harmonize.crosswalk.RULE_KINDS), help="restrict to rule kinds"
+    )
+    pc.add_argument("--basis", action="store_true", help="include the basis text")
+    pc.add_argument("--validate", action="store_true", help="check the rules against the dictionary")
+    pc.set_defaults(func=cmd_crosswalk)
+
+    ph = sub.add_parser("harmonize", help="harmonise one or more release folders and write the result")
+    ph.add_argument("paths", nargs="+", help="release folders (one per cohort)")
+    ph.add_argument("--out", required=True, help="output directory")
+    ph.add_argument("--compress", action="store_true", help="write .csv.gz")
+    ph.add_argument("--keep-original", action="store_true", help="keep renamed columns as <name>_orig")
+    ph.add_argument("--no-genomic", action="store_true", help="skip genomic files")
+    ph.set_defaults(func=cmd_harmonize)
     return p
 
 

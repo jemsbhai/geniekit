@@ -203,9 +203,14 @@ def _code(level: str) -> str:
     return m.group(1) if m else level.strip()
 
 
+_PSEUDO_LEVELS = ("free-text", "icd-o-3", "genie-[institution]", "yyyy", "xxxxxx")
+
+
 def _parse_levels(levels: Iterable[str], numeric: bool) -> list:
     out: list = []
     for raw in levels:
+        if any(marker in raw.lower() for marker in _PSEUDO_LEVELS):
+            continue
         code = _code(raw)
         if numeric:
             try:

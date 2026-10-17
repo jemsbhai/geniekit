@@ -1,0 +1,392 @@
+# geniekit harmonisation crosswalk for the six public AACR Project GENIE BPC releases.
+#
+# Canonical form: the generation-2 naming and code lists (BrCa v1.0, PANC v1.0,
+# Prostate v1.0, BLADDER v1.0-public). Where generation-2 releases disagree
+# among themselves, the newest release (BLADDER v1.0-public) is canonical,
+# except where the older form is the common denominator that every cohort can
+# populate (pfs_cohort). Every rule names the cohorts it applies to, what it
+# does, and the basis for it in the Analytic Data Guides and Variable
+# Synopses. Rules are applied in file order, so renames precede recodes.
+#
+# Rule kinds
+#   rename    : one column renamed (optionally with its _days/_mos/_yrs siblings)
+#   recode    : values mapped one to one (cosmetic spelling or ordering)
+#   collapse  : values mapped many to one onto a coarser canonical code list;
+#               the original value is kept in <variable>_detail
+#   coerce    : type conversion
+#   derive    : a new column computed by a named method in geniekit.harmonize.derive
+#   note      : no change; documents a known, deliberate non-harmonisation
+version: 1
+generated: "2026-10-17"
+generations:
+  1: [NSCLC, CRC]
+  2: [BrCa, PANC, Prostate, BLADDER]
+
+rules:
+  # ------------------------------------------------------------------ renames
+  - id: cigarette-rename
+    kind: rename
+    table: cancer
+    cohorts: [NSCLC, CRC]
+    from: ca_lung_cigarette
+    to: ca_cigarette
+    basis: >
+      Both fields are "Cigarette Use at Time of Diagnosis" with the same six
+      levels (NPCR tobacco standard). Generation 1 populated the field for NSCLC
+      diagnoses only and prefixed its label with the cancer; generation 2
+      populates it for lung or bladder diagnoses.
+
+  - id: cigarette-spelling
+    kind: recode
+    table: cancer
+    cohorts: [NSCLC]
+    variable: ca_cigarette
+    map:
+      "Former user (quit <1 year)": "Former user (quit < 1 year)"
+    basis: Spelling of one level; every other cohort writes "quit < 1 year".
+
+  - id: dmets-post-dx
+    kind: rename
+    table: cancer
+    cohorts: [NSCLC, CRC]
+    from: dmets_stage_i_iii
+    to: dmets_post_dx
+    siblings: []
+    caveat: population
+    basis: >
+      Both indicate distant metastasis after diagnosis by radiology or pathology
+      report. Generation 1 populates stage I-III patients only; generation 2
+      populates every patient without distant metastasis at diagnosis, which also
+      covers stage IV patients staged on T or N criteria (for example bladder
+      stage IVA, T4b N0 M0). Comparable for stage I-III patients.
+
+  - id: dmets-liver
+    kind: rename
+    table: cancer
+    cohorts: [NSCLC, CRC]
+    from: dmets_liver
+    to: dist_mets_liver
+    siblings: [{from: dx_to_dmets_liver, to: dx_to_dist_mets_liver}]
+    basis: >
+      Liver is classified from the single ICD-O-3 code C22.0 in the metastasis
+      classification appendix of every guide (C22.1, intrahepatic bile duct, is
+      Abdomen in all six), so the generation-1 and generation-2 flags count the
+      same findings.
+
+  - id: dmets-breast
+    kind: rename
+    table: cancer
+    cohorts: [NSCLC, CRC]
+    from: dmets_breast
+    to: dist_mets_breast
+    siblings: [{from: dx_to_dmets_breast, to: dx_to_dist_mets_breast}]
+    basis: >
+      The breast codes (C50.0-C50.9) form the Breast region in both generations'
+      classification appendices.
+
+  - id: dmets-brain
+    kind: rename
+    table: cancer
+    cohorts: [NSCLC, CRC]
+    from: dmets_brain
+    to: dist_mets_brain_cns
+    siblings: [{from: dx_to_dmets_brain, to: dx_to_dist_mets_brain_cns}]
+    caveat: C72.9
+    basis: >
+      The Brain/CNS region (C69.2, C70.x, C71.x, C72.x, C75.1-C75.3) has the
+      same code set in both generations' classification appendices with one
+      exception: C72.9 "Nervous system NOS" is Brain/CNS in generation 2 and
+      "Rare and NOS" in generation 1, so a generation-1 patient whose only
+      nervous-system finding was coded C72.9 is not flagged.
+
+  - id: dmets-regions-not-comparable
+    kind: note
+    table: cancer
+    cohorts: [NSCLC, CRC]
+    variables:
+      [dmets_abdomen, dmets_bone, dmets_extremity, dmets_head_neck, dmets_pelvis, dmets_thorax,
+       dx_to_dmets_abdomen_days, dx_to_dmets_bone_days, dx_to_dmets_extremity_days,
+       dx_to_dmets_head_neck_days, dx_to_dmets_pelvis_days, dx_to_dmets_thorax_days]
+    basis: >
+      Kept under their generation-1 names because their ICD-O-3 code sets do not
+      coincide with any generation-2 site (data-raw/build_metastasis_sites.py
+      compares the classification appendices code by code). Generation-1 Abdomen
+      also contains the peritoneum (C48.x, ascites F20), the adrenal glands
+      (C74.x) and intra-abdominal lymph nodes (C77.2), which generation 2 files
+      under Peritoneum, Adrenal and Lymph nodes. Generation-1 Thorax contains the
+      lung (C34.x), pleura and pericardium (C38.0, C38.4, C38.8, fluids F30 and
+      F50), the ribs (C41.3) and intrathoracic and axillary lymph nodes (C77.1,
+      C77.3), which generation 2 files under Pulmonary, Pleura, Pericardial, Bone
+      and Lymph nodes. Generation-1 Head and neck includes skin of the head and
+      face (C44.0-C44.4) and the mandible (C41.1), generation-2 Skin and Bone.
+      Generation-1 Pelvis includes pelvic lymph nodes (C77.5), generation-2
+      Lymph nodes. Generation-1 Extremity is split across generation-2 Skin,
+      Other and Lymph nodes. The harmonised 17-site set is rederived from the
+      imaging and pathology site codes by geniekit.harmonize.metastasis.
+
+  # ---------------------------------------------------------------- collapses
+  - id: ethnicity-collapse
+    kind: collapse
+    table: patient
+    cohorts: [NSCLC, CRC]
+    variable: naaccr_ethnicity_code
+    map:
+      "Non-Spanish; non-Hispanic": "Non-Spanish/non-Hispanic"
+      "Mexican (includes Chicano)": "Spanish/Hispanic"
+      "Puerto Rican": "Spanish/Hispanic"
+      "Cuban": "Spanish/Hispanic"
+      "South or Central American (except Brazil)": "Spanish/Hispanic"
+      "Other specified Spanish/Hispanic origin (includes European; excludes Dominican Republic)": "Spanish/Hispanic"
+      "Spanish NOS or Hispanic NOS or Latino NOS": "Spanish/Hispanic"
+      "Spanish surname only": "Spanish/Hispanic"
+      "Dominican Republic": "Spanish/Hispanic"
+      "Unknown whether Spanish or not": "Unknown"
+    basis: >
+      Generation 1 releases the full NAACCR #190 Spanish/Hispanic origin list;
+      generation 2 releases it collapsed to Spanish/Hispanic, Non-Spanish/
+      non-Hispanic, Unknown and Not Collected. The collapse is exact; the
+      detailed value is preserved in naaccr_ethnicity_code_detail.
+
+  - id: race-primary-collapse
+    kind: collapse
+    table: patient
+    cohorts: [NSCLC, CRC]
+    variable: naaccr_race_code_primary
+    map: &race_map
+      "White": "White"
+      "Black": "Black"
+      "American Indian, Aleutian, or Eskimo": "Native American"
+      "Chinese": "Asian"
+      "Japanese": "Asian"
+      "Filipino": "Asian"
+      "Korean": "Asian"
+      "Vietnamese": "Asian"
+      "Laotian": "Asian"
+      "Hmong": "Asian"
+      "Kampuchean (Cambodian)": "Asian"
+      "Thai": "Asian"
+      "Asian Indian or Pakistani NOS": "Asian"
+      "Asian Indian": "Asian"
+      "Pakistani": "Asian"
+      "Other Asian": "Asian"
+      "Hawaiian": "Pacific Islander"
+      "Micronesian NOS": "Pacific Islander"
+      "Chamorro/Chamoru": "Pacific Islander"
+      "Guamanian NOS": "Pacific Islander"
+      "Polynesian NOS": "Pacific Islander"
+      "Tahitian": "Pacific Islander"
+      "Samoan": "Pacific Islander"
+      "Tongan": "Pacific Islander"
+      "Melanesian NOS": "Pacific Islander"
+      "Fiji Islander": "Pacific Islander"
+      "New Guinean": "Pacific Islander"
+      "Pacific Islander NOS": "Pacific Islander"
+      "Other": "Other"
+      "Unknown": "Unknown"
+      "No further race documented": "Not Applicable"
+    basis: >
+      Generation 1 releases the full NAACCR #160-#164 race code list; generation
+      2 releases Asian, Black, Native American, White, Pacific Islander, Other,
+      Unknown, Not Applicable and Not collected. The NAACCR Asian codes (04-17,
+      96) map to Asian and the Pacific Islander codes (07, 20-32, 97) to Pacific
+      Islander; "No further race documented" (code 88) is the secondary and
+      tertiary race filler that generation 2 labels Not Applicable.
+
+  - id: race-secondary-collapse
+    kind: collapse
+    table: patient
+    cohorts: [NSCLC, CRC]
+    variable: naaccr_race_code_secondary
+    map: *race_map
+    basis: See race-primary-collapse.
+
+  - id: race-tertiary-collapse
+    kind: collapse
+    table: patient
+    cohorts: [NSCLC, CRC]
+    variable: naaccr_race_code_tertiary
+    map: *race_map
+    basis: See race-primary-collapse.
+
+  - id: sex-collapse
+    kind: collapse
+    table: patient
+    cohorts: [NSCLC, CRC]
+    variable: naaccr_sex_code
+    map:
+      "Male": "Male"
+      "Female": "Female"
+      "Other intersex, disorders of sexual development/DSD": "Other"
+      "Transsexual NOS": "Transsexual"
+      "Transsexual natal male": "Transsexual"
+      "Transsexual natal female": "Transsexual"
+    basis: >
+      Generation 1 releases the NAACCR #220 sex codes in full; generation 2
+      collapses the intersex code to Other and the three transsexual codes to
+      Transsexual, and adds Unknown and Not Collected.
+
+  - id: heme-type-collapse
+    kind: collapse
+    table: cancer
+    cohorts: [BrCa, PANC, Prostate]
+    variable: ca_heme_type
+    map:
+      "Leukemia NOS": "Leukemia"
+      "Non-Hodgkin's Lymphoma": "Lymphoma"
+      "Other Hematopoietic or lymphoid neoplasm": "Other hematopoietic or lymphoid neoplasm"
+    basis: >
+      NSCLC, CRC and BLADDER use Leukemia and Lymphoma; BrCa and PANC use
+      Leukemia NOS and Non-Hodgkin's Lymphoma; Prostate uses Leukemia NOS and both
+      lymphoma levels. The coarser pair is the common denominator. Prostate also
+      capitalises "Other Hematopoietic".
+
+  - id: pfs-cohort-collapse
+    kind: collapse
+    table: cancer
+    cohorts: [Prostate, BLADDER]
+    variable: pfs_cohort
+    map:
+      "Stage I-III with Distant Mets": "Stage I-III with Distant Mets"
+      "Stage IV with Distant Mets at Diagnosis": "Stage IV"
+      "Stage IV with Distant Mets Post-Diagnosis": "Stage IV"
+    basis: >
+      NSCLC, CRC, BrCa and PANC define pfs_cohort as "Stage I-III with Distant
+      Mets" or "Stage IV"; Prostate and BLADDER split stage IV by whether distant
+      metastasis was present at diagnosis. The two-level form is the common
+      denominator; the split is kept in pfs_cohort_detail and the time origin of
+      the PFS endpoints is made explicit by pfs_time_origin.
+
+  # ------------------------------------------------------------------ recodes
+  - id: bca-subtype-order
+    kind: recode
+    table: cancer
+    cohorts: [CRC]
+    variable: bca_subtype
+    map:
+      "HER2+, HR+": "HR+, HER2+"
+      "HER2+, HR-": "HR-, HER2+"
+      "HER2-, HR+": "HR+, HER2-"
+    basis: CRC writes the HER2 status first; every other cohort writes HR first.
+
+  - id: brain-type-spelling
+    kind: recode
+    table: cancer
+    cohorts: [NSCLC]
+    variable: ca_type_brain
+    map:
+      "Mixed gliomas": "Mixed Gliomas"
+      "Oligodendroglial tumors": "Oligodendroglial Tumors"
+    basis: Capitalisation of two levels.
+
+  - id: scan-type-dash
+    kind: recode
+    table: imaging
+    cohorts: [NSCLC]
+    variable: image_scan_type
+    map:
+      "Mammogram \u2013 Use for Breast Cancer only": "Mammogram - Use for Breast Cancer only"
+    basis: NSCLC uses an en dash in one level; every other cohort uses a hyphen.
+
+  - id: pdl1-range-spelling
+    kind: recode
+    table: pathology
+    cohorts: [NSCLC]
+    variables:
+      [pdl1_tclrange, pdl1_tclrange_2, pdl1_tclrange_3, pdl1_tcurange, pdl1_tcurange_2, pdl1_tcurange_3,
+       pdl1_iclrange, pdl1_iclrange_2, pdl1_iclrange_3, pdl1_icurange, pdl1_icurange_2, pdl1_icurange_3,
+       pdl1_lcpsrange, pdl1_lcpsrange_2, pdl1_lcpsrange_3, pdl1_ucpsrange, pdl1_ucpsrange_2, pdl1_ucpsrange_3]
+    map:
+      "<1": "< 1"
+    basis: NSCLC writes "<1"; every other cohort writes "< 1".
+
+  - id: tumor-deposits-not-documented
+    kind: recode
+    table: cancer
+    cohorts: [BrCa, PANC, Prostate]
+    variables: [ca_crc_td, crc_td]
+    map:
+      "Not documented in medical record; Cannot be determined by the pathologist; Pathology report does not mention tumor deposits; No surgical resection done; Tumor Deposits not assessed or unknown if assessed": "Not documented in medical record"
+    basis: >
+      BrCa, PANC and Prostate spell out the reasons a tumor-deposit count is
+      missing in one long level; CRC and BLADDER use the short level.
+
+  # ---------------------------------------------------------------- coercions
+  - id: cpt-seq-year
+    kind: coerce
+    table: cpt
+    cohorts: [NSCLC, CRC, BrCa, PANC, Prostate, BLADDER]
+    variable: cpt_seq_date
+    to: Int64
+    basis: >
+      Year of next-generation sequencing; declared Character in NSCLC and CRC and
+      Numeric in the other four. Four-digit years in both.
+
+  - id: seer-summary-stage
+    kind: derive
+    table: cancer
+    cohorts: [NSCLC, CRC, BrCa, PANC, Prostate, BLADDER]
+    method: seer_summary_stage
+    outputs: [naaccr_seer_sum_stage, naaccr_seer_sum_stage_label]
+    basis: >
+      NAACCR #759 General Summary Stage. Generation 1 releases the registry text
+      as free text; generation 2 releases the one-digit code. The method keeps
+      the code (0, 1, 2, 3, 4, 5, 7, 8, 9) as a nullable integer, mapping
+      recognised code text or labels, and adds the standard label; unmatched
+      free text is kept in naaccr_seer_sum_stage_detail.
+
+  # ----------------------------------------------------------------- derived
+  - id: race-ethnicity-derived
+    kind: derive
+    table: patient
+    cohorts: [NSCLC, CRC, BrCa, PANC, Prostate, BLADDER]
+    method: race_ethnicity
+    outputs: [race_ethnicity, race_ethnicity_released]
+    basis: >
+      race_ethnicity is released for NSCLC and CRC only, "defined based on
+      naaccr_race_code_primary and naaccr_ethnicity_code" (the guides do not
+      print the rule). geniekit derives it for every cohort with one rule over
+      the collapsed codes: Spanish/Hispanic origin gives Hispanic/Latinx;
+      otherwise White gives Non-Hispanic White, Black gives Non-Hispanic Black,
+      Asian or Pacific Islander gives AAAPI, Native American or Other gives
+      Other, and Unknown or Not collected gives Unknown. Because generation 2
+      cannot distinguish Asian Indian or Pakistani from other Asian codes, that
+      generation-1 level is folded into AAAPI for every cohort. The released
+      generation-1 value is kept in race_ethnicity_released so the rule can be
+      checked against it.
+
+  - id: pfs-time-origin
+    kind: derive
+    table: cancer
+    cohorts: [NSCLC, CRC, BrCa, PANC, Prostate, BLADDER]
+    method: pfs_time_origin
+    outputs: [pfs_cohort_detail, pfs_time_origin]
+    basis: >
+      Every guide states that PFS is measured from diagnosis for stage IV
+      patients with distant metastasis at diagnosis and from the first distant
+      metastasis otherwise. pfs_time_origin makes that origin explicit
+      ("diagnosis" or "first distant metastasis"); pfs_cohort_detail keeps the
+      three-level Prostate/BLADDER split where it exists.
+
+  # ------------------------------------------------------------------- notes
+  - id: additive-levels
+    kind: note
+    table: cancer
+    cohorts: [BrCa, PANC, Prostate, BLADDER]
+    variables: [ca_grade, ca_type, ca_path_t_stage, ca_clin_t_stage, ca_path_t1_det, ca_clin_t1_det, ca_gen_sum_stage_2]
+    basis: >
+      Generation 2 adds levels (ca_grade: Low grade, High grade; ca_type: four
+      sarcoma types; T stage: Tis, Ta, T1a1; ca_gen_sum_stage_2: Advanced) that
+      generation 1 never used. No recoding is needed; absence of a level in a
+      cohort is not a coding difference.
+
+  - id: tables-by-cohort
+    kind: note
+    table: "*"
+    cohorts: [NSCLC, CRC, BrCa, PANC, Prostate, BLADDER]
+    variables: []
+    basis: >
+      The tumor-marker table exists for CRC, BrCa, PANC and Prostate; the
+      radiation-therapy table for PANC, Prostate and BLADDER; structural variants
+      are released as data_fusions.txt for NSCLC and CRC and data_sv.txt for the
+      others. Stacking leaves rows absent rather than inventing them, and the
+      genomic harmoniser maps both structural-variant formats onto one schema.
