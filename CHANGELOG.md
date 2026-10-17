@@ -3,9 +3,30 @@
 All notable changes to geniekit are recorded here. The format follows
 Keep a Changelog, and the project follows semantic versioning.
 
-## [Unreleased]
+## [0.1.0] - 2026-10-17
+
+All three challenge capabilities are in this release: harmonisation of the six
+cohorts, lines of therapy from a user-chosen index event, and the
+aggregate-only analytic layer, each validated on the six public releases.
 
 ### Added
+- `geniekit.aggregate`: an aggregate-only analytic layer with disclosure
+  control. `DisclosureControl` (minimum cell size, complementary suppression
+  or omission of small categories by comparing the records lost, suppression
+  of every statistic derived from a suppressed count); summary functions
+  (`frequency_table`, `numeric_summary`, `proportion_table`,
+  `flag_frequency_table`, `km_table`, `early_failure_table`) that return
+  `SafeTable` objects with notes and the suppressions recorded; statistics
+  implemented without optional dependencies and checked against hand
+  computations (Wilson interval, risk difference, Fisher exact, chi-square,
+  Kaplan-Meier with log-log limits); genomic builders (`gene_flags`,
+  `msi_mmr_status`); `analytic_table` joining clinical variables, index
+  event, lines of therapy and the first-line failure endpoint; and the
+  Challenge 10 example `liver_metastasis_report` (patients by liver
+  metastasis status, early treatment failure at 6 and 9 months after
+  first-line therapy, APC/TP53/KRAS/NRAS/BRAF V600E/SMAD4 and MSI-H or dMMR
+  frequencies, comparisons by liver metastasis and genomic subgroup). CLI
+  command `aggregate` and the notebook `examples/crc_liver_metastasis.ipynb`.
 - `geniekit.lot`: lines of therapy from the regimen tables, counted from an
   index event the user chooses (`diagnosis`, `advanced`, `first_progression`,
   `first_systemic`, or a custom table or callable), with explicit rules

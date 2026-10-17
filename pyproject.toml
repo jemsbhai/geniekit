@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "geniekit"
-version = "0.0.1"
+version = "0.1.0"
 description = "Harmonise the AACR Project GENIE BPC cohorts, compute lines of therapy, and run aggregate-only analyses."
 readme = "README.md"
 requires-python = ">=3.10"

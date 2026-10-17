@@ -19,10 +19,12 @@ GENIE access requirement (see [Data access](#data-access)).
 
 ## Status
 
-Version 0.0.1 is the first public release and contains the foundation: the
-release registry, the data dictionary, data loading and download, and the
-synthetic cohorts. The harmonisation and line-of-therapy layers are in the
-repository and follow in the next release; the aggregate layer is next.
+Version 0.1.0 covers the three challenge capabilities (harmonisation, lines of
+therapy, aggregate-only analytic layer) on top of the foundation (release
+registry, data dictionary, download and loading, synthetic cohorts). Every
+layer has been run against the six public releases; the test suite runs on
+synthetic data and a simulated fixture, and repeats the real-data checks when
+`GENIEKIT_DATA_DIR` points at downloaded releases.
 
 | Module | Purpose | State |
 |---|---|---|
@@ -32,7 +34,7 @@ repository and follow in the next release; the aggregate layer is next.
 | `geniekit.synthetic` | Dictionary-driven synthetic cohorts: every declared column, cohort-specific naming, coherent simulated histories | done |
 | `geniekit.harmonize` | Crosswalk-driven normalisation of the six cohorts (renames, code-list collapses, spelling, types, derived variables, genomic format unification) with a provenance report; stacking across cohorts | done; metastasis-site rederivation follows |
 | `geniekit.lot` | Lines of therapy from the regimen tables, counted from an index event the user chooses, with explicit rules, a drug vocabulary covering both schema generations, and a reason recorded for every assignment | done |
-| `geniekit.aggregate` | Aggregate-only analyses with disclosure control | planned |
+| `geniekit.aggregate` | Aggregate-only analytic layer: disclosure control (minimum cell size, complementary suppression or omission of small categories, suppression of derived statistics), summary tables, Kaplan-Meier and early-failure endpoints, genomic flags, and the CRC liver-metastasis report of Challenge 10 | done |
 
 ## Installation
 
@@ -200,6 +202,41 @@ misspells goserelin; the vocabulary resolves all of them. Classes and roles
 were assigned by the package author and are kept in one reviewable table
 (`data-raw/build_drug_vocabulary.py`).
 
+Aggregate-only analysis:
+
+```python
+from geniekit import io, aggregate
+
+crc = io.load_release("data/genie_bpc/CRC_v2.0-public")
+report = aggregate.liver_metastasis_report(crc, control=aggregate.DisclosureControl(min_count=5))
+report.summary()                                 # sixteen tables, with the number of suppressed cells in each
+report["early_failure_by_liver_mets"].frame      # early treatment failure at 6 and 9 months, liver versus no liver metastasis
+report["alterations_by_liver_mets"].frame        # APC, TP53, KRAS, NRAS, RAS, BRAF, BRAF V600E, SMAD4 by liver metastasis
+report.to_dir("outputs/crc_liver")               # one CSV per table plus report.json: settings, notes, every suppression
+
+# the same building blocks for other questions
+table = aggregate.analytic_table(crc, genes=["KRAS", "BRAF"], msi=True)    # patient-level; stays with you
+aggregate.proportion_table(table, "first_line", by="stage_dx").frame     # aggregate; can be shared
+aggregate.km_table(table, "os_from_index_days", "died", by="liver_mets", at_months=[12, 24]).frame
+```
+
+What the layer guarantees: every function returns a `SafeTable` whose cells are
+counts, percentages, intervals, medians and quartiles (never a minimum or
+maximum), estimates or p-values. A count below `min_count` (default 5) is
+replaced by a marker, and every statistic derived from it is replaced too.
+Where a suppressed count could be recovered from a table margin, the layer
+compares the records hidden by suppressing a second cell with the records
+hidden by omitting the small row or column, takes the cheaper option, and
+writes what it did into the table's notes. Groups too small to summarise are
+omitted with a note instead of appearing as columns of markers. The report's
+`report.json` records the index event, the line rules, the disclosure settings
+and each suppressed cell, so a reader of the aggregate output can see how it
+was produced.
+
+The notebook `examples/crc_liver_metastasis.ipynb` walks through the report;
+it uses the real CRC release when `GENIEKIT_DATA_DIR` is set and a synthetic
+cohort otherwise.
+
 Command line:
 
 ```powershell
@@ -214,6 +251,7 @@ geniekit crosswalk --validate                     # the harmonisation rules, che
 geniekit harmonize data\genie_bpc\NSCLC_v2.0-public data\genie_bpc\BLADDER_v1.0-public --out data\harmonized
 geniekit lot data\genie_bpc\CRC_v2.0-public --index advanced --out data\lot_crc
 geniekit lot data\genie_bpc\Prostate_v1.0-public --rules prostate --progression-aware --out data\lot_prostate
+geniekit aggregate data\genie_bpc\CRC_v2.0-public --min-count 5 --out outputs\crc_liver
 ```
 
 ## The six public releases

@@ -12,7 +12,7 @@ from collections.abc import Sequence
 
 import pandas as pd
 
-from . import dictionary, harmonize, io, lot, releases
+from . import aggregate, dictionary, harmonize, io, lot, releases
 from ._version import __version__
 
 
@@ -192,7 +192,6 @@ def cmd_harmonize(args: argparse.Namespace) -> int:
 
 
 def cmd_lot(args: argparse.Namespace) -> int:
-
     tables = ["patient", "cancer_index", "cancer_non_index", "regimen", "imaging", "med_onc"]
     loaded = []
     for path in args.paths:
@@ -233,6 +232,34 @@ def cmd_lot(args: argparse.Namespace) -> int:
     if result.unknown_labels:
         print(f"\ndrug labels not in the packaged vocabulary: {', '.join(result.unknown_labels)}")
     folder = result.to_dir(args.out, compress=args.compress)
+    print(f"\nwritten to {folder}")
+    return 0
+
+
+def cmd_aggregate(args: argparse.Namespace) -> int:
+    try:
+        data = io.load_release(args.path)
+    except (FileNotFoundError, ValueError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+    control = aggregate.DisclosureControl(min_count=args.min_count, complementary=not args.no_complementary)
+    try:
+        rules = lot.PRESETS[args.rules]
+    except KeyError:
+        print(
+            f"error: unknown rules preset {args.rules!r}; expected one of {sorted(lot.PRESETS)}",
+            file=sys.stderr,
+        )
+        return 1
+    genes = args.genes or list(aggregate.CRC_GENES)
+    report = aggregate.liver_metastasis_report(
+        data, control=control, index=args.index, rules=rules, months=args.months, genes=genes
+    )
+    print(report)
+    _print_frame(report.summary())
+    for note in report.notes:
+        print(f"note: {note}")
+    folder = report.to_dir(args.out)
     print(f"\nwritten to {folder}")
     return 0
 
@@ -333,6 +360,23 @@ def build_parser() -> argparse.ArgumentParser:
     pl.add_argument("--cancers", default="index", choices=["index", "non_index", "all"])
     pl.add_argument("--compress", action="store_true", help="write .csv.gz")
     pl.set_defaults(func=cmd_lot)
+
+    pa2 = sub.add_parser("aggregate", help="aggregate-only liver-metastasis report with disclosure control")
+    pa2.add_argument("path", help="release folder (CRC for the challenge example; any cohort works)")
+    pa2.add_argument("--out", required=True, help="output directory (one CSV per table plus report.json)")
+    pa2.add_argument(
+        "--min-count", type=int, default=aggregate.DisclosureControl().min_count, help="minimum cell size"
+    )
+    pa2.add_argument("--no-complementary", action="store_true", help="primary suppression only")
+    pa2.add_argument("--index", default="advanced", choices=list(lot.INDEX_EVENTS), help="index event")
+    pa2.add_argument(
+        "--rules", default="default", help=f"line rules preset: {', '.join(sorted(lot.PRESETS))}"
+    )
+    pa2.add_argument(
+        "--months", type=float, nargs="+", default=[6, 9], help="early-failure horizons in months"
+    )
+    pa2.add_argument("--genes", nargs="+", help="genes for the alteration table (default: the CRC list)")
+    pa2.set_defaults(func=cmd_aggregate)
     return p
 
 

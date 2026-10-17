@@ -147,3 +147,31 @@ def test_lot_command(tmp_path, capsys):
     assert (out / "custom" / "lot_lines.csv.gz").exists()
     assert cli.main(["lot", str(fixture), "--out", str(out), "--rules", "nope"]) == 1
     assert cli.main(["lot", str(fixture / "missing"), "--out", str(out)]) == 1
+
+
+def test_aggregate_command(tmp_path, capsys):
+    from pathlib import Path
+
+    fixture = Path(__file__).parent / "fixtures" / "nsclc_sim"
+    out = tmp_path / "agg"
+    args = [
+        "aggregate",
+        str(fixture),
+        "--out",
+        str(out),
+        "--min-count",
+        "7",
+        "--genes",
+        "EGFR",
+        "KRAS",
+        "--months",
+        "6",
+    ]
+    assert cli.main(args) == 0
+    text = capsys.readouterr().out
+    assert "AggregateReport(" in text and "written to" in text
+    manifest = json.loads((out / "report.json").read_text(encoding="utf-8"))
+    assert manifest["settings"]["disclosure"]["min_count"] == 7 and manifest["settings"]["months"] == [6.0]
+    assert (out / "early_failure_by_liver_mets.csv").exists()
+    assert cli.main(["aggregate", str(fixture), "--out", str(out), "--rules", "nope"]) == 1
+    assert cli.main(["aggregate", str(fixture / "missing"), "--out", str(out)]) == 1
