@@ -1,0 +1,86 @@
+[build-system]
+requires = ["setuptools>=69,<81", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "geniekit"
+version = "0.1.0"
+description = "Harmonise the AACR Project GENIE BPC cohorts, compute lines of therapy, and run aggregate-only analyses."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Muntaser Syed", email = "jemsbhai@gmail.com" }]
+keywords = ["AACR", "GENIE", "BPC", "oncology", "clinicogenomic", "line of therapy", "harmonization", "Synapse"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+  "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+dependencies = [
+  "pandas>=2.2,<4",
+  "numpy>=1.26,<3",
+  "requests>=2.32,<3",
+  "pyyaml>=6.0,<7",
+]
+
+[project.optional-dependencies]
+synapse = ["synapseclient>=4.4,<5"]
+survival = ["lifelines>=0.29,<1"]
+notebook = ["jupyter>=1.1,<2", "matplotlib>=3.9,<4"]
+dev = [
+  "pytest>=8.3,<9",
+  "pytest-cov>=6.0,<8",
+  "ruff>=0.9,<1",
+  "openpyxl>=3.1,<4",
+  "build>=1.2,<2",
+  "twine>=6.0,<7",
+]
+
+[project.urls]
+Homepage = "https://github.com/jemsbhai/geniekit"
+Issues = "https://github.com/jemsbhai/geniekit/issues"
+"AACR Project GENIE" = "https://aacrprojectgenie.org/"
+
+[project.scripts]
+geniekit = "geniekit.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+geniekit = ["resources/*.json", "resources/*.csv.gz", "resources/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+filterwarnings = ["error::DeprecationWarning:geniekit.*"]
+
+[tool.coverage.run]
+source = ["geniekit"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "RUF"]
+ignore = ["RUF012"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["N802", "N806"]

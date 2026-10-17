@@ -1,0 +1,94 @@
+from __future__ import annotations
+
+import pytest
+
+from geniekit import cli
+
+
+def test_help_and_version(capsys):
+    with pytest.raises(SystemExit) as exc:
+        cli.main(["--help"])
+    assert exc.value.code == 0
+    with pytest.raises(SystemExit) as exc:
+        cli.main(["--version"])
+    assert exc.value.code == 0
+    out = capsys.readouterr().out
+    assert "geniekit" in out
+
+
+def test_releases_command(capsys):
+    assert cli.main(["releases"]) == 0
+    out = capsys.readouterr().out
+    assert "BLADDER" in out and "syn75201334" in out and "registry generated on" in out
+    assert cli.main(["releases", "--cohort", "crc", "--files"]) == 0
+    out = capsys.readouterr().out
+    assert (
+        "tm_level_dataset.csv" in out and "NSCLC" not in out.split("registry generated")[0].split("\n\n")[1]
+    )
+
+
+def test_dictionary_lookup(capsys):
+    assert cli.main(["dictionary", "lookup", "ca_cigarette", "--table", "cancer", "--values"]) == 0
+    out = capsys.readouterr().out
+    assert "BrCa" in out and "NSCLC" not in out
+    assert cli.main(["dictionary", "lookup", "no_such_variable"]) == 1
+
+
+def test_dictionary_diff_and_presence(capsys):
+    assert cli.main(["dictionary", "diff", "--table", "cpt", "--kind", "dtype"]) == 0
+    out = capsys.readouterr().out
+    assert "cpt_seq_date" in out
+    assert cli.main(["dictionary", "presence", "--table", "patient", "--only-partial"]) == 0
+    out = capsys.readouterr().out
+    assert "race_ethnicity" in out and "record_id" not in out
+
+
+def test_inspect_fixture(capsys):
+    from pathlib import Path
+
+    fixture = Path(__file__).parent / "fixtures" / "nsclc_sim"
+    with pytest.warns(UserWarning, match="cpt: 1 missing"):
+        assert cli.main(["inspect", str(fixture), "--no-genomic"]) == 0
+    out = capsys.readouterr().out
+    assert "CohortData(NSCLC v2.0-public" in out and "regimen" in out and "column differences" in out
+    assert cli.main(["inspect", str(fixture / "missing")]) == 1
+
+
+def test_access_and_download_without_token(monkeypatch, tmp_path, capsys):
+    monkeypatch.delenv("SYNAPSE_AUTH_TOKEN", raising=False)
+    monkeypatch.delenv("SYNAPSE_PAT", raising=False)
+    monkeypatch.setenv("SYNAPSE_CONFIG_FILE", str(tmp_path / "none"))
+    assert cli.main(["access"]) == 1
+    assert "No Synapse personal access token" in capsys.readouterr().err
+    assert cli.main(["download", "crc", "--dest", str(tmp_path)]) == 1
+
+
+def test_access_and_download_with_stub(monkeypatch, tmp_path, capsys):
+    from geniekit.io import synapse as syn_mod
+
+    from .test_io_synapse import TOKEN, FakeHttp
+
+    monkeypatch.setattr(syn_mod.requests, "Session", lambda: FakeHttp(approved=False))
+    assert cli.main(["access", "--token", TOKEN]) == 2
+    assert "SUBMITTED" in capsys.readouterr().out
+    monkeypatch.setattr(syn_mod.requests, "Session", lambda: FakeHttp())
+    assert cli.main(["access", "--token", TOKEN]) == 0
+    assert (
+        cli.main(
+            [
+                "download",
+                "crc",
+                "--dest",
+                str(tmp_path),
+                "--groups",
+                "clinical",
+                "--tables",
+                "patient",
+                "--token",
+                TOKEN,
+            ]
+        )
+        == 0
+    )
+    out = capsys.readouterr().out
+    assert "release folder" in out and (tmp_path / "CRC_v2.0-public" / "manifest.json").exists()

@@ -1,0 +1,13 @@
+{
+  "generated_on": "2026-10-17",
+  "generator": "data-raw/build_dictionary.py",
+  "n_rows": 4771,
+  "sources": {
+    "NSCLC v2.0-public": "https://www.aacr.org/wp-content/uploads/2022/05/BPC_NSCLC_v2.0-public_variable_synopsis_posted.xlsx",
+    "CRC v2.0-public": "https://www.aacr.org/wp-content/uploads/2022/09/BPC_CRC_v2.0-public_variable_synopsis-xlxm.xlsx",
+    "BrCa v1.0-public": "https://www.aacr.org/wp-content/uploads/2025/12/GENIE-BPC-BrCa_v1.0-public-Variable-Synopsis.xlsx",
+    "PANC v1.0-public": "https://www.aacr.org/wp-content/uploads/2026/03/GENIE-BPC-PANC-v1.0-public-Variable-Synopsis.xlsx",
+    "Prostate v1.0-public": "https://www.aacr.org/wp-content/uploads/2026/03/GENIE-BPC-Prostate-v1.0-public-Variable-Synopsis.xlsx",
+    "BLADDER v1.0-public": "https://aacrprojectgenie.org/wp-content/uploads/2026/08/GENIE-BPC-Bladder-v1.0-public-Variable-Synopsis.xlsx"
+  }
+}

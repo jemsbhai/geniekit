@@ -1,0 +1,48 @@
+# secrets and local configuration
+.env
+.env.local
+*.key
+*secret*
+*.pem
+.synapseConfig
+.synapse_pat
+
+# patient-level data must never be committed
+data/
+data-raw/cache/
+*.csv
+*.tsv
+*.seg
+*.maf
+*.parquet
+!src/geniekit/resources/*.csv.gz
+!tests/fixtures/**/*.csv.gz
+!tests/fixtures/**/*.txt.gz
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.python-version
+
+# tooling
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.ipynb_checkpoints/
+
+# editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

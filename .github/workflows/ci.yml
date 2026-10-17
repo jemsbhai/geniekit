@@ -1,0 +1,32 @@
+﻿name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: python -m pip install --upgrade pip && pip install -e ".[dev]"
+      - name: Lint
+        run: ruff check src tests data-raw scripts && ruff format --check src tests data-raw scripts
+      - name: Vocabulary
+        run: python scripts/check_vocabulary.py
+      - name: Test
+        run: pytest tests/ -v --cov=geniekit --cov-report=term
+      - name: Import and CLI smoke test
+        run: |
+          python -c "import geniekit; print(geniekit.__version__)"
+          geniekit --help
+      - name: Build distributions
+        run: python -m build

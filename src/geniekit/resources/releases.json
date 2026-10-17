@@ -1,0 +1,1880 @@
+{
+  "generated_on": "2026-10-17",
+  "generator": "data-raw/build_releases.py",
+  "source": {
+    "synapse_data_releases_folder": "syn27056700",
+    "synapse_bpc_project": "syn27056172",
+    "access_requirement_id": "9606645",
+    "rest_endpoint": "https://repo-prod.prod.sagebase.org/repo/v1"
+  },
+  "releases": [
+    {
+      "cohort": "NSCLC",
+      "version": "v2.0-public",
+      "label": "NSCLC v2.0-public",
+      "full_name": "Non-Small Cell Lung Cancer",
+      "schema_generation": 1,
+      "cohort_folder": "syn27056179",
+      "release_folder": "syn27056697",
+      "release_folder_created_on": "2022-02-11T18:58:24.811Z",
+      "release_folder_modified_on": "2025-02-15T07:11:56.661Z",
+      "n_patients": 1846,
+      "institutions": [
+        "DFCI",
+        "MSK",
+        "UHN",
+        "VICC"
+      ],
+      "cbioportal_study_id": "nsclc_public_genie_bpc",
+      "sources": {
+        "aacr_page": "https://aacrprojectgenie.org/data/bpc-nsclc-v2-0-public/",
+        "data_guide_url": "https://www.aacr.org/wp-content/uploads/2022/05/GENIE-BPC-NSCLC-v2.0-public-Analytic-Data-Guide-1.pdf",
+        "variable_synopsis_url": "https://www.aacr.org/wp-content/uploads/2022/05/BPC_NSCLC_v2.0-public_variable_synopsis_posted.xlsx"
+      },
+      "documentation": {
+        "variable_synopsis": {
+          "synapse_id": "syn30557312",
+          "filename": "BPC_NSCLC_v2.0-public_variable_synopsis.xlsx"
+        },
+        "data_guide": {
+          "synapse_id": "syn30557304",
+          "filename": "GENIE BPC NSCLC v2.0-public Analytic Data Guide.pdf"
+        },
+        "cbioportal_crosswalk": {
+          "synapse_id": "syn29288708",
+          "filename": "GENIE BPC cBioPortal Variable Crosswalk_NSCLC_PUBLIC.pdf"
+        }
+      },
+      "files": {
+        "clinical": {
+          "cancer_index": {
+            "synapse_id": "syn30358090",
+            "filename": "cancer_level_dataset_index.csv"
+          },
+          "cancer_non_index": {
+            "synapse_id": "syn30358091",
+            "filename": "cancer_level_dataset_non_index.csv"
+          },
+          "cpt": {
+            "synapse_id": "syn30358092",
+            "filename": "cancer_panel_test_level_dataset.csv"
+          },
+          "imaging": {
+            "synapse_id": "syn30358093",
+            "filename": "imaging_level_dataset.csv"
+          },
+          "med_onc": {
+            "synapse_id": "syn30358094",
+            "filename": "med_onc_note_level_dataset.csv"
+          },
+          "pathology": {
+            "synapse_id": "syn30358095",
+            "filename": "pathology_report_level_dataset.csv"
+          },
+          "patient": {
+            "synapse_id": "syn30358096",
+            "filename": "patient_level_dataset.csv"
+          },
+          "regimen": {
+            "synapse_id": "syn30358097",
+            "filename": "regimen_cancer_level_dataset.csv"
+          }
+        },
+        "genomic": {
+          "cna": {
+            "synapse_id": "syn30358099",
+            "filename": "data_CNA.txt"
+          },
+          "fusions": {
+            "synapse_id": "syn30358105",
+            "filename": "data_fusions.txt"
+          },
+          "gene_matrix": {
+            "synapse_id": "syn30358106",
+            "filename": "data_gene_matrix.txt"
+          },
+          "mutations": {
+            "synapse_id": "syn30358120",
+            "filename": "data_mutations_extended.txt"
+          },
+          "cna_seg": {
+            "synapse_id": "syn30358128",
+            "filename": "genie_nsclc_data_cna_hg19.seg"
+          },
+          "tmb": {
+            "synapse_id": "syn74835209",
+            "filename": "tmb.tsv"
+          }
+        },
+        "cbioportal_clinical": {
+          "clinical_patient": {
+            "synapse_id": "syn30358100",
+            "filename": "data_clinical_patient.txt"
+          },
+          "clinical_sample": {
+            "synapse_id": "syn30358101",
+            "filename": "data_clinical_sample.txt"
+          },
+          "supp_survival": {
+            "synapse_id": "syn30358103",
+            "filename": "data_clinical_supp_survival.txt"
+          },
+          "supp_survival_treatment": {
+            "synapse_id": "syn30358104",
+            "filename": "data_clinical_supp_survival_treatment.txt"
+          }
+        },
+        "cbioportal_timeline": {
+          "cancer_diagnosis": {
+            "synapse_id": "syn30358121",
+            "filename": "data_timeline_cancer_diagnosis.txt"
+          },
+          "imaging": {
+            "synapse_id": "syn30358122",
+            "filename": "data_timeline_imaging.txt"
+          },
+          "medonc": {
+            "synapse_id": "syn30358123",
+            "filename": "data_timeline_medonc.txt"
+          },
+          "pathology": {
+            "synapse_id": "syn30358124",
+            "filename": "data_timeline_pathology.txt"
+          },
+          "sample_acquisition": {
+            "synapse_id": "syn30358125",
+            "filename": "data_timeline_sample_acquisition.txt"
+          },
+          "sequencing": {
+            "synapse_id": "syn30358126",
+            "filename": "data_timeline_sequencing.txt"
+          },
+          "treatment": {
+            "synapse_id": "syn30358127",
+            "filename": "data_timeline_treatment.txt"
+          }
+        },
+        "gene_panels": [
+          {
+            "synapse_id": "syn30358107",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-1.txt",
+            "panel": "DFCI-ONCOPANEL-1"
+          },
+          {
+            "synapse_id": "syn30358108",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-2.txt",
+            "panel": "DFCI-ONCOPANEL-2"
+          },
+          {
+            "synapse_id": "syn30358109",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-3.txt",
+            "panel": "DFCI-ONCOPANEL-3"
+          },
+          {
+            "synapse_id": "syn30358110",
+            "filename": "data_gene_panel_MSK-IMPACT341.txt",
+            "panel": "MSK-IMPACT341"
+          },
+          {
+            "synapse_id": "syn30358112",
+            "filename": "data_gene_panel_MSK-IMPACT410.txt",
+            "panel": "MSK-IMPACT410"
+          },
+          {
+            "synapse_id": "syn30358113",
+            "filename": "data_gene_panel_MSK-IMPACT468.txt",
+            "panel": "MSK-IMPACT468"
+          },
+          {
+            "synapse_id": "syn30358114",
+            "filename": "data_gene_panel_UHN-48-V1.txt",
+            "panel": "UHN-48-V1"
+          },
+          {
+            "synapse_id": "syn30358116",
+            "filename": "data_gene_panel_UHN-50-V2.txt",
+            "panel": "UHN-50-V2"
+          },
+          {
+            "synapse_id": "syn30358117",
+            "filename": "data_gene_panel_VICC-01-SOLIDTUMOR.txt",
+            "panel": "VICC-01-SOLIDTUMOR"
+          },
+          {
+            "synapse_id": "syn30358118",
+            "filename": "data_gene_panel_VICC-01-T5A.txt",
+            "panel": "VICC-01-T5A"
+          },
+          {
+            "synapse_id": "syn30358119",
+            "filename": "data_gene_panel_VICC-01-T7.txt",
+            "panel": "VICC-01-T7"
+          }
+        ],
+        "case_lists": [
+          {
+            "synapse_id": "syn30358149",
+            "filename": "cases_Non-Small_Cell_Lung_Cancer.txt"
+          },
+          {
+            "synapse_id": "syn30358150",
+            "filename": "cases_all.txt"
+          },
+          {
+            "synapse_id": "syn30358151",
+            "filename": "cases_cna.txt"
+          },
+          {
+            "synapse_id": "syn30358153",
+            "filename": "cases_cnaseq.txt"
+          },
+          {
+            "synapse_id": "syn30358154",
+            "filename": "cases_sequenced.txt"
+          }
+        ],
+        "meta": [
+          {
+            "synapse_id": "syn30358129",
+            "filename": "genie_nsclc_meta_cna_hg19.seg"
+          },
+          {
+            "synapse_id": "syn30358130",
+            "filename": "meta_CNA.txt"
+          },
+          {
+            "synapse_id": "syn30358132",
+            "filename": "meta_clinical_patient.txt"
+          },
+          {
+            "synapse_id": "syn30358133",
+            "filename": "meta_clinical_sample.txt"
+          },
+          {
+            "synapse_id": "syn30358134",
+            "filename": "meta_fusions.txt"
+          },
+          {
+            "synapse_id": "syn30358135",
+            "filename": "meta_gene_matrix.txt"
+          },
+          {
+            "synapse_id": "syn30358136",
+            "filename": "meta_mutations_extended.txt"
+          },
+          {
+            "synapse_id": "syn30358137",
+            "filename": "meta_study.txt"
+          },
+          {
+            "synapse_id": "syn30358138",
+            "filename": "meta_timeline_cancer_diagnosis.txt"
+          },
+          {
+            "synapse_id": "syn30358141",
+            "filename": "meta_timeline_imaging.txt"
+          },
+          {
+            "synapse_id": "syn30358142",
+            "filename": "meta_timeline_medonc.txt"
+          },
+          {
+            "synapse_id": "syn30358143",
+            "filename": "meta_timeline_pathology.txt"
+          },
+          {
+            "synapse_id": "syn30358144",
+            "filename": "meta_timeline_sample_acquisition.txt"
+          },
+          {
+            "synapse_id": "syn30358146",
+            "filename": "meta_timeline_sequencing.txt"
+          },
+          {
+            "synapse_id": "syn30358147",
+            "filename": "meta_timeline_treatment.txt"
+          }
+        ],
+        "other": []
+      }
+    },
+    {
+      "cohort": "CRC",
+      "version": "v2.0-public",
+      "label": "CRC v2.0-public",
+      "full_name": "Colorectal Cancer",
+      "schema_generation": 1,
+      "cohort_folder": "syn30991602",
+      "release_folder": "syn30991637",
+      "release_folder_created_on": "2022-05-25T20:30:17.570Z",
+      "release_folder_modified_on": "2025-02-15T07:12:37.035Z",
+      "n_patients": 1485,
+      "institutions": [
+        "DFCI",
+        "MSK",
+        "VICC"
+      ],
+      "cbioportal_study_id": "crc_public_genie_bpc",
+      "sources": {
+        "aacr_page": "https://aacrprojectgenie.org/data/bpc-crc-v2-0-public/",
+        "data_guide_url": "https://www.aacr.org/wp-content/uploads/2022/11/GENIE-BPC-CRC-v2.0-public-Analytic-Data-Guide-v2.pdf",
+        "variable_synopsis_url": "https://www.aacr.org/wp-content/uploads/2022/09/BPC_CRC_v2.0-public_variable_synopsis-xlxm.xlsx"
+      },
+      "documentation": {
+        "data_guide": {
+          "synapse_id": "syn39433168",
+          "filename": "BPC_CRC_v2.0-public_Analytic_Data_Guide.pdf"
+        },
+        "variable_synopsis": {
+          "synapse_id": "syn39433163",
+          "filename": "BPC_CRC_v2.0-public_variable_synopsis.xlsx"
+        }
+      },
+      "files": {
+        "clinical": {
+          "cancer_index": {
+            "synapse_id": "syn39802574",
+            "filename": "cancer_level_dataset_index.csv"
+          },
+          "cancer_non_index": {
+            "synapse_id": "syn39802575",
+            "filename": "cancer_level_dataset_non_index.csv"
+          },
+          "cpt": {
+            "synapse_id": "syn39802578",
+            "filename": "cancer_panel_test_level_dataset.csv"
+          },
+          "imaging": {
+            "synapse_id": "syn39802579",
+            "filename": "imaging_level_dataset.csv"
+          },
+          "med_onc": {
+            "synapse_id": "syn39802583",
+            "filename": "med_onc_note_level_dataset.csv"
+          },
+          "pathology": {
+            "synapse_id": "syn39802586",
+            "filename": "pathology_report_level_dataset.csv"
+          },
+          "patient": {
+            "synapse_id": "syn39802589",
+            "filename": "patient_level_dataset.csv"
+          },
+          "regimen": {
+            "synapse_id": "syn39802591",
+            "filename": "regimen_cancer_level_dataset.csv"
+          },
+          "tumor_marker": {
+            "synapse_id": "syn39802593",
+            "filename": "tm_level_dataset.csv"
+          }
+        },
+        "genomic": {
+          "cna": {
+            "synapse_id": "syn39802596",
+            "filename": "data_CNA.txt"
+          },
+          "fusions": {
+            "synapse_id": "syn39802604",
+            "filename": "data_fusions.txt"
+          },
+          "gene_matrix": {
+            "synapse_id": "syn39802608",
+            "filename": "data_gene_matrix.txt"
+          },
+          "mutations": {
+            "synapse_id": "syn39802627",
+            "filename": "data_mutations_extended.txt"
+          },
+          "cna_seg": {
+            "synapse_id": "syn39802662",
+            "filename": "genie_crc_data_cna_hg19.seg"
+          },
+          "tmb": {
+            "synapse_id": "syn74835130",
+            "filename": "tmb.tsv"
+          }
+        },
+        "cbioportal_clinical": {
+          "clinical_patient": {
+            "synapse_id": "syn39802598",
+            "filename": "data_clinical_patient.txt"
+          },
+          "clinical_sample": {
+            "synapse_id": "syn39802600",
+            "filename": "data_clinical_sample.txt"
+          },
+          "supp_survival": {
+            "synapse_id": "syn39802601",
+            "filename": "data_clinical_supp_survival.txt"
+          },
+          "supp_survival_treatment": {
+            "synapse_id": "syn39802602",
+            "filename": "data_clinical_supp_survival_treatment.txt"
+          }
+        },
+        "cbioportal_timeline": {
+          "cancer_diagnosis": {
+            "synapse_id": "syn39802628",
+            "filename": "data_timeline_cancer_diagnosis.txt"
+          },
+          "imaging": {
+            "synapse_id": "syn39802632",
+            "filename": "data_timeline_imaging.txt"
+          },
+          "labtest": {
+            "synapse_id": "syn39802637",
+            "filename": "data_timeline_labtest.txt"
+          },
+          "medonc": {
+            "synapse_id": "syn39802643",
+            "filename": "data_timeline_medonc.txt"
+          },
+          "pathology": {
+            "synapse_id": "syn39802649",
+            "filename": "data_timeline_pathology.txt"
+          },
+          "sample_acquisition": {
+            "synapse_id": "syn39802652",
+            "filename": "data_timeline_sample_acquisition.txt"
+          },
+          "sequencing": {
+            "synapse_id": "syn39802657",
+            "filename": "data_timeline_sequencing.txt"
+          },
+          "treatment": {
+            "synapse_id": "syn39802659",
+            "filename": "data_timeline_treatment.txt"
+          }
+        },
+        "gene_panels": [
+          {
+            "synapse_id": "syn39802612",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-2.txt",
+            "panel": "DFCI-ONCOPANEL-2"
+          },
+          {
+            "synapse_id": "syn39802613",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-3.txt",
+            "panel": "DFCI-ONCOPANEL-3"
+          },
+          {
+            "synapse_id": "syn39802614",
+            "filename": "data_gene_panel_MSK-IMPACT341.txt",
+            "panel": "MSK-IMPACT341"
+          },
+          {
+            "synapse_id": "syn39802618",
+            "filename": "data_gene_panel_MSK-IMPACT410.txt",
+            "panel": "MSK-IMPACT410"
+          },
+          {
+            "synapse_id": "syn39802619",
+            "filename": "data_gene_panel_MSK-IMPACT468.txt",
+            "panel": "MSK-IMPACT468"
+          },
+          {
+            "synapse_id": "syn39802620",
+            "filename": "data_gene_panel_VICC-01-SOLIDTUMOR.txt",
+            "panel": "VICC-01-SOLIDTUMOR"
+          },
+          {
+            "synapse_id": "syn39802623",
+            "filename": "data_gene_panel_VICC-01-T5A.txt",
+            "panel": "VICC-01-T5A"
+          },
+          {
+            "synapse_id": "syn39802625",
+            "filename": "data_gene_panel_VICC-01-T7.txt",
+            "panel": "VICC-01-T7"
+          }
+        ],
+        "case_lists": [
+          {
+            "synapse_id": "syn39802787",
+            "filename": "cases_Colorectal_Cancer.txt"
+          },
+          {
+            "synapse_id": "syn39802790",
+            "filename": "cases_all.txt"
+          },
+          {
+            "synapse_id": "syn39802795",
+            "filename": "cases_cna.txt"
+          },
+          {
+            "synapse_id": "syn39802802",
+            "filename": "cases_cnaseq.txt"
+          },
+          {
+            "synapse_id": "syn39802805",
+            "filename": "cases_sequenced.txt"
+          }
+        ],
+        "meta": [
+          {
+            "synapse_id": "syn39802667",
+            "filename": "genie_crc_meta_cna_hg19.seg"
+          },
+          {
+            "synapse_id": "syn39802675",
+            "filename": "meta_CNA.txt"
+          },
+          {
+            "synapse_id": "syn39802678",
+            "filename": "meta_clinical_patient.txt"
+          },
+          {
+            "synapse_id": "syn39802682",
+            "filename": "meta_clinical_sample.txt"
+          },
+          {
+            "synapse_id": "syn39802685",
+            "filename": "meta_fusions.txt"
+          },
+          {
+            "synapse_id": "syn39802692",
+            "filename": "meta_gene_matrix.txt"
+          },
+          {
+            "synapse_id": "syn39802697",
+            "filename": "meta_mutations_extended.txt"
+          },
+          {
+            "synapse_id": "syn39802705",
+            "filename": "meta_study.txt"
+          },
+          {
+            "synapse_id": "syn39802712",
+            "filename": "meta_timeline_cancer_diagnosis.txt"
+          },
+          {
+            "synapse_id": "syn39802722",
+            "filename": "meta_timeline_imaging.txt"
+          },
+          {
+            "synapse_id": "syn39802732",
+            "filename": "meta_timeline_labtest.txt"
+          },
+          {
+            "synapse_id": "syn39802736",
+            "filename": "meta_timeline_medonc.txt"
+          },
+          {
+            "synapse_id": "syn39802740",
+            "filename": "meta_timeline_pathology.txt"
+          },
+          {
+            "synapse_id": "syn39802750",
+            "filename": "meta_timeline_sample_acquisition.txt"
+          },
+          {
+            "synapse_id": "syn39802757",
+            "filename": "meta_timeline_sequencing.txt"
+          },
+          {
+            "synapse_id": "syn39802766",
+            "filename": "meta_timeline_treatment.txt"
+          }
+        ],
+        "other": []
+      }
+    },
+    {
+      "cohort": "BrCa",
+      "version": "v1.0-public",
+      "label": "BrCa v1.0-public",
+      "full_name": "Breast Cancer (early onset)",
+      "schema_generation": 2,
+      "cohort_folder": "syn71823923",
+      "release_folder": "syn71825332",
+      "release_folder_created_on": "2025-12-03T02:10:52.610Z",
+      "release_folder_modified_on": "2026-01-27T19:12:52.045Z",
+      "n_patients": 1130,
+      "institutions": [
+        "DFCI",
+        "MSK",
+        "VICC"
+      ],
+      "cbioportal_study_id": "brca_public_genie_bpc",
+      "sources": {
+        "aacr_page": "https://aacrprojectgenie.org/data/bpc-brca-v1-0-public/",
+        "data_guide_url": "https://www.aacr.org/wp-content/uploads/2025/12/GENIE-BPC-BrCa_v1.0-public-Analytic-Data-Guide.pdf",
+        "variable_synopsis_url": "https://www.aacr.org/wp-content/uploads/2025/12/GENIE-BPC-BrCa_v1.0-public-Variable-Synopsis.xlsx"
+      },
+      "documentation": {
+        "data_guide": {
+          "synapse_id": "syn71825209",
+          "filename": "GENIE BPC BrCa_v1.0-public Analytic Data Guide.pdf"
+        },
+        "variable_synopsis": {
+          "synapse_id": "syn71825211",
+          "filename": "GENIE BPC BrCa_v1.0-public Variable Synopsis.xlsx"
+        },
+        "release_notes": {
+          "synapse_id": "syn71825210",
+          "filename": "GENIE BPC BrCa_v1.0-public_Release_Notes.pdf"
+        }
+      },
+      "files": {
+        "clinical": {
+          "cancer_index": {
+            "synapse_id": "syn71825316",
+            "filename": "cancer_level_dataset_index.csv"
+          },
+          "cancer_non_index": {
+            "synapse_id": "syn71825308",
+            "filename": "cancer_level_dataset_non_index.csv"
+          },
+          "cpt": {
+            "synapse_id": "syn71825309",
+            "filename": "cancer_panel_test_level_dataset.csv"
+          },
+          "imaging": {
+            "synapse_id": "syn71825313",
+            "filename": "imaging_level_dataset.csv"
+          },
+          "med_onc": {
+            "synapse_id": "syn71825312",
+            "filename": "med_onc_note_level_dataset.csv"
+          },
+          "pathology": {
+            "synapse_id": "syn71825311",
+            "filename": "pathology_report_level_dataset.csv"
+          },
+          "patient": {
+            "synapse_id": "syn71825315",
+            "filename": "patient_level_dataset.csv"
+          },
+          "regimen": {
+            "synapse_id": "syn71825310",
+            "filename": "regimen_cancer_level_dataset.csv"
+          },
+          "tumor_marker": {
+            "synapse_id": "syn71825314",
+            "filename": "tm_level_dataset.csv"
+          }
+        },
+        "genomic": {
+          "cna": {
+            "synapse_id": "syn71825238",
+            "filename": "data_CNA.txt"
+          },
+          "cna_seg": {
+            "synapse_id": "syn71825244",
+            "filename": "data_cna_hg19.seg"
+          },
+          "gene_matrix": {
+            "synapse_id": "syn71825258",
+            "filename": "data_gene_matrix.txt"
+          },
+          "mutations": {
+            "synapse_id": "syn71825237",
+            "filename": "data_mutations_extended.txt"
+          },
+          "sv": {
+            "synapse_id": "syn71825252",
+            "filename": "data_sv.txt"
+          },
+          "genomic_information": {
+            "synapse_id": "syn71825225",
+            "filename": "genomic_information.txt"
+          },
+          "tmb": {
+            "synapse_id": "syn74835278",
+            "filename": "tmb.tsv"
+          }
+        },
+        "cbioportal_clinical": {
+          "clinical_patient": {
+            "synapse_id": "syn71825255",
+            "filename": "data_clinical_patient.txt"
+          },
+          "clinical_sample": {
+            "synapse_id": "syn71825242",
+            "filename": "data_clinical_sample.txt"
+          },
+          "supp_survival": {
+            "synapse_id": "syn71825215",
+            "filename": "data_clinical_supp_survival.txt"
+          },
+          "supp_survival_treatment": {
+            "synapse_id": "syn71825248",
+            "filename": "data_clinical_supp_survival_treatment.txt"
+          }
+        },
+        "cbioportal_timeline": {
+          "cancer_diagnosis": {
+            "synapse_id": "syn71825239",
+            "filename": "data_timeline_cancer_diagnosis.txt"
+          },
+          "imaging": {
+            "synapse_id": "syn71825243",
+            "filename": "data_timeline_imaging.txt"
+          },
+          "labtest": {
+            "synapse_id": "syn71825241",
+            "filename": "data_timeline_labtest.txt"
+          },
+          "medonc": {
+            "synapse_id": "syn71825223",
+            "filename": "data_timeline_medonc.txt"
+          },
+          "pathology": {
+            "synapse_id": "syn71825219",
+            "filename": "data_timeline_pathology.txt"
+          },
+          "sample_acquisition": {
+            "synapse_id": "syn71825236",
+            "filename": "data_timeline_sample_acquisition.txt"
+          },
+          "sequencing": {
+            "synapse_id": "syn71825234",
+            "filename": "data_timeline_sequencing.txt"
+          },
+          "treatment": {
+            "synapse_id": "syn71825218",
+            "filename": "data_timeline_treatment.txt"
+          }
+        },
+        "gene_panels": [
+          {
+            "synapse_id": "syn71825247",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-1.txt",
+            "panel": "DFCI-ONCOPANEL-1"
+          },
+          {
+            "synapse_id": "syn71825250",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-2.txt",
+            "panel": "DFCI-ONCOPANEL-2"
+          },
+          {
+            "synapse_id": "syn71825261",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-3.txt",
+            "panel": "DFCI-ONCOPANEL-3"
+          },
+          {
+            "synapse_id": "syn71825254",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-3.1.txt",
+            "panel": "DFCI-ONCOPANEL-3.1"
+          },
+          {
+            "synapse_id": "syn71825259",
+            "filename": "data_gene_panel_MSK-IMPACT341.txt",
+            "panel": "MSK-IMPACT341"
+          },
+          {
+            "synapse_id": "syn71825249",
+            "filename": "data_gene_panel_MSK-IMPACT410.txt",
+            "panel": "MSK-IMPACT410"
+          },
+          {
+            "synapse_id": "syn71825253",
+            "filename": "data_gene_panel_MSK-IMPACT468.txt",
+            "panel": "MSK-IMPACT468"
+          },
+          {
+            "synapse_id": "syn71825257",
+            "filename": "data_gene_panel_VICC-01-D2.txt",
+            "panel": "VICC-01-D2"
+          },
+          {
+            "synapse_id": "syn71825246",
+            "filename": "data_gene_panel_VICC-01-T5A.txt",
+            "panel": "VICC-01-T5A"
+          },
+          {
+            "synapse_id": "syn71825251",
+            "filename": "data_gene_panel_VICC-01-T7.txt",
+            "panel": "VICC-01-T7"
+          }
+        ],
+        "case_lists": [
+          {
+            "synapse_id": "syn71825283",
+            "filename": "cases_Breast_Cancer.txt"
+          },
+          {
+            "synapse_id": "syn71825287",
+            "filename": "cases_Breast_Sarcoma.txt"
+          },
+          {
+            "synapse_id": "syn71825284",
+            "filename": "cases_all.txt"
+          },
+          {
+            "synapse_id": "syn71825282",
+            "filename": "cases_cna.txt"
+          },
+          {
+            "synapse_id": "syn71825288",
+            "filename": "cases_cnaseq.txt"
+          },
+          {
+            "synapse_id": "syn71825285",
+            "filename": "cases_sequenced.txt"
+          },
+          {
+            "synapse_id": "syn71825286",
+            "filename": "cases_sv.txt"
+          }
+        ],
+        "meta": [
+          {
+            "synapse_id": "syn71825256",
+            "filename": "meta_CNA.txt"
+          },
+          {
+            "synapse_id": "syn71825224",
+            "filename": "meta_clinical_patient.txt"
+          },
+          {
+            "synapse_id": "syn71825231",
+            "filename": "meta_clinical_sample.txt"
+          },
+          {
+            "synapse_id": "syn71825220",
+            "filename": "meta_cna_hg19_seg.txt"
+          },
+          {
+            "synapse_id": "syn71825235",
+            "filename": "meta_fusions.txt"
+          },
+          {
+            "synapse_id": "syn71825229",
+            "filename": "meta_gene_matrix.txt"
+          },
+          {
+            "synapse_id": "syn71825233",
+            "filename": "meta_mutations_extended.txt"
+          },
+          {
+            "synapse_id": "syn71825228",
+            "filename": "meta_study.txt"
+          },
+          {
+            "synapse_id": "syn71825260",
+            "filename": "meta_sv.txt"
+          },
+          {
+            "synapse_id": "syn71825230",
+            "filename": "meta_timeline_cancer_diagnosis.txt"
+          },
+          {
+            "synapse_id": "syn71825222",
+            "filename": "meta_timeline_imaging.txt"
+          },
+          {
+            "synapse_id": "syn71825221",
+            "filename": "meta_timeline_labtest.txt"
+          },
+          {
+            "synapse_id": "syn71825216",
+            "filename": "meta_timeline_medonc.txt"
+          },
+          {
+            "synapse_id": "syn71825232",
+            "filename": "meta_timeline_pathology.txt"
+          },
+          {
+            "synapse_id": "syn71825227",
+            "filename": "meta_timeline_sample_acquisition.txt"
+          },
+          {
+            "synapse_id": "syn71825217",
+            "filename": "meta_timeline_sequencing.txt"
+          },
+          {
+            "synapse_id": "syn71825226",
+            "filename": "meta_timeline_treatment.txt"
+          }
+        ],
+        "other": []
+      }
+    },
+    {
+      "cohort": "PANC",
+      "version": "v1.0-public",
+      "label": "PANC v1.0-public",
+      "full_name": "Pancreatic Cancer",
+      "schema_generation": 2,
+      "cohort_folder": "syn72666403",
+      "release_folder": "syn72666404",
+      "release_folder_created_on": "2026-01-29T23:49:04.136Z",
+      "release_folder_modified_on": "2026-02-02T20:13:06.978Z",
+      "n_patients": 1109,
+      "institutions": [
+        "DFCI",
+        "MSK",
+        "UHN",
+        "VICC"
+      ],
+      "cbioportal_study_id": "panc_public_genie_bpc",
+      "sources": {
+        "aacr_page": "https://aacrprojectgenie.org/data/panc-1-0-public/",
+        "data_guide_url": "https://www.aacr.org/wp-content/uploads/2026/03/GENIE-BPC-PANC-1.0-public-Analytic-Data-Guide.pdf",
+        "variable_synopsis_url": "https://www.aacr.org/wp-content/uploads/2026/03/GENIE-BPC-PANC-v1.0-public-Variable-Synopsis.xlsx"
+      },
+      "documentation": {
+        "data_guide": {
+          "synapse_id": "syn72666511",
+          "filename": "GENIE BPC PANC 1.0-public Analytic Data Guide.pdf"
+        },
+        "release_notes": {
+          "synapse_id": "syn72666513",
+          "filename": "GENIE BPC PANC v1.0-public Release Notes.pdf"
+        },
+        "variable_synopsis": {
+          "synapse_id": "syn72666512",
+          "filename": "GENIE BPC PANC v1.0-public Variable Synopsis.xlsx"
+        }
+      },
+      "files": {
+        "clinical": {
+          "radiation": {
+            "synapse_id": "syn72666501",
+            "filename": "ca_radtx_dataset.csv"
+          },
+          "cancer_index": {
+            "synapse_id": "syn72666500",
+            "filename": "cancer_level_dataset_index.csv"
+          },
+          "cancer_non_index": {
+            "synapse_id": "syn72666507",
+            "filename": "cancer_level_dataset_non_index.csv"
+          },
+          "cpt": {
+            "synapse_id": "syn72666499",
+            "filename": "cancer_panel_test_level_dataset.csv"
+          },
+          "imaging": {
+            "synapse_id": "syn72666505",
+            "filename": "imaging_level_dataset.csv"
+          },
+          "med_onc": {
+            "synapse_id": "syn72666508",
+            "filename": "med_onc_note_level_dataset.csv"
+          },
+          "pathology": {
+            "synapse_id": "syn72666504",
+            "filename": "pathology_report_level_dataset.csv"
+          },
+          "patient": {
+            "synapse_id": "syn72666502",
+            "filename": "patient_level_dataset.csv"
+          },
+          "regimen": {
+            "synapse_id": "syn72666503",
+            "filename": "regimen_cancer_level_dataset.csv"
+          },
+          "tumor_marker": {
+            "synapse_id": "syn72666506",
+            "filename": "tm_level_dataset.csv"
+          }
+        },
+        "genomic": {
+          "cna": {
+            "synapse_id": "syn72666457",
+            "filename": "data_CNA.txt"
+          },
+          "cna_seg": {
+            "synapse_id": "syn72666467",
+            "filename": "data_cna_hg19.seg"
+          },
+          "gene_matrix": {
+            "synapse_id": "syn72666460",
+            "filename": "data_gene_matrix.txt"
+          },
+          "mutations": {
+            "synapse_id": "syn72666431",
+            "filename": "data_mutations_extended.txt"
+          },
+          "sv": {
+            "synapse_id": "syn72666432",
+            "filename": "data_sv.txt"
+          },
+          "genomic_information": {
+            "synapse_id": "syn72666434",
+            "filename": "genomic_information.txt"
+          },
+          "tmb": {
+            "synapse_id": "syn74833868",
+            "filename": "tmb.tsv"
+          }
+        },
+        "cbioportal_clinical": {
+          "clinical_patient": {
+            "synapse_id": "syn72666446",
+            "filename": "data_clinical_patient.txt"
+          },
+          "clinical_sample": {
+            "synapse_id": "syn72666468",
+            "filename": "data_clinical_sample.txt"
+          },
+          "supp_survival": {
+            "synapse_id": "syn72666459",
+            "filename": "data_clinical_supp_survival.txt"
+          },
+          "supp_survival_treatment": {
+            "synapse_id": "syn72666452",
+            "filename": "data_clinical_supp_survival_treatment.txt"
+          }
+        },
+        "cbioportal_timeline": {
+          "cancer_diagnosis": {
+            "synapse_id": "syn72666458",
+            "filename": "data_timeline_cancer_diagnosis.txt"
+          },
+          "imaging": {
+            "synapse_id": "syn72666445",
+            "filename": "data_timeline_imaging.txt"
+          },
+          "labtest": {
+            "synapse_id": "syn72666450",
+            "filename": "data_timeline_labtest.txt"
+          },
+          "medonc": {
+            "synapse_id": "syn72666454",
+            "filename": "data_timeline_medonc.txt"
+          },
+          "pathology": {
+            "synapse_id": "syn72666462",
+            "filename": "data_timeline_pathology.txt"
+          },
+          "sample_acquisition": {
+            "synapse_id": "syn72666448",
+            "filename": "data_timeline_sample_acquisition.txt"
+          },
+          "sequencing": {
+            "synapse_id": "syn72666449",
+            "filename": "data_timeline_sequencing.txt"
+          },
+          "treatment": {
+            "synapse_id": "syn72666447",
+            "filename": "data_timeline_treatment.txt"
+          }
+        },
+        "gene_panels": [
+          {
+            "synapse_id": "syn72666456",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-1.txt",
+            "panel": "DFCI-ONCOPANEL-1"
+          },
+          {
+            "synapse_id": "syn72666485",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-2.txt",
+            "panel": "DFCI-ONCOPANEL-2"
+          },
+          {
+            "synapse_id": "syn72666461",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-3.txt",
+            "panel": "DFCI-ONCOPANEL-3"
+          },
+          {
+            "synapse_id": "syn72666470",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-3.1.txt",
+            "panel": "DFCI-ONCOPANEL-3.1"
+          },
+          {
+            "synapse_id": "syn72666472",
+            "filename": "data_gene_panel_MSK-IMPACT341.txt",
+            "panel": "MSK-IMPACT341"
+          },
+          {
+            "synapse_id": "syn72666466",
+            "filename": "data_gene_panel_MSK-IMPACT410.txt",
+            "panel": "MSK-IMPACT410"
+          },
+          {
+            "synapse_id": "syn72666435",
+            "filename": "data_gene_panel_MSK-IMPACT468.txt",
+            "panel": "MSK-IMPACT468"
+          },
+          {
+            "synapse_id": "syn72666474",
+            "filename": "data_gene_panel_UHN-48-V1.txt",
+            "panel": "UHN-48-V1"
+          },
+          {
+            "synapse_id": "syn72666473",
+            "filename": "data_gene_panel_UHN-50-V2.txt",
+            "panel": "UHN-50-V2"
+          },
+          {
+            "synapse_id": "syn72666430",
+            "filename": "data_gene_panel_UHN-555-PAN-GI-V1.txt",
+            "panel": "UHN-555-PAN-GI-V1"
+          },
+          {
+            "synapse_id": "syn72666464",
+            "filename": "data_gene_panel_UHN-555-V1.txt",
+            "panel": "UHN-555-V1"
+          },
+          {
+            "synapse_id": "syn72666465",
+            "filename": "data_gene_panel_UHN-OCA-V3.txt",
+            "panel": "UHN-OCA-V3"
+          },
+          {
+            "synapse_id": "syn72666475",
+            "filename": "data_gene_panel_VICC-01-T5A.txt",
+            "panel": "VICC-01-T5A"
+          },
+          {
+            "synapse_id": "syn72666469",
+            "filename": "data_gene_panel_VICC-01-T7.txt",
+            "panel": "VICC-01-T7"
+          }
+        ],
+        "case_lists": [
+          {
+            "synapse_id": "syn72666487",
+            "filename": "cases_Pancreatic_Cancer.txt"
+          },
+          {
+            "synapse_id": "syn72666490",
+            "filename": "cases_all.txt"
+          },
+          {
+            "synapse_id": "syn72666488",
+            "filename": "cases_cna.txt"
+          },
+          {
+            "synapse_id": "syn72666492",
+            "filename": "cases_cnaseq.txt"
+          },
+          {
+            "synapse_id": "syn72666489",
+            "filename": "cases_sequenced.txt"
+          },
+          {
+            "synapse_id": "syn72666491",
+            "filename": "cases_sv.txt"
+          }
+        ],
+        "meta": [
+          {
+            "synapse_id": "syn72666471",
+            "filename": "meta_CNA.txt"
+          },
+          {
+            "synapse_id": "syn72666455",
+            "filename": "meta_clinical_patient.txt"
+          },
+          {
+            "synapse_id": "syn72666440",
+            "filename": "meta_clinical_sample.txt"
+          },
+          {
+            "synapse_id": "syn72666451",
+            "filename": "meta_cna_hg19_seg.txt"
+          },
+          {
+            "synapse_id": "syn72666443",
+            "filename": "meta_gene_matrix.txt"
+          },
+          {
+            "synapse_id": "syn72666442",
+            "filename": "meta_mutations_extended.txt"
+          },
+          {
+            "synapse_id": "syn72666463",
+            "filename": "meta_study.txt"
+          },
+          {
+            "synapse_id": "syn72666444",
+            "filename": "meta_sv.txt"
+          },
+          {
+            "synapse_id": "syn72666436",
+            "filename": "meta_timeline_cancer_diagnosis.txt"
+          },
+          {
+            "synapse_id": "syn72666453",
+            "filename": "meta_timeline_imaging.txt"
+          },
+          {
+            "synapse_id": "syn72666437",
+            "filename": "meta_timeline_labtest.txt"
+          },
+          {
+            "synapse_id": "syn72666433",
+            "filename": "meta_timeline_medonc.txt"
+          },
+          {
+            "synapse_id": "syn72666441",
+            "filename": "meta_timeline_pathology.txt"
+          },
+          {
+            "synapse_id": "syn72666438",
+            "filename": "meta_timeline_sample_acquisition.txt"
+          },
+          {
+            "synapse_id": "syn72666429",
+            "filename": "meta_timeline_sequencing.txt"
+          },
+          {
+            "synapse_id": "syn72666439",
+            "filename": "meta_timeline_treatment.txt"
+          }
+        ],
+        "other": []
+      }
+    },
+    {
+      "cohort": "Prostate",
+      "version": "v1.0-public",
+      "label": "Prostate v1.0-public",
+      "full_name": "Prostate Cancer",
+      "schema_generation": 2,
+      "cohort_folder": "syn73719277",
+      "release_folder": "syn73719283",
+      "release_folder_created_on": "2026-02-13T00:10:21.060Z",
+      "release_folder_modified_on": "2026-03-18T22:33:48.008Z",
+      "n_patients": 1116,
+      "institutions": [
+        "DFCI",
+        "MSK",
+        "UHN",
+        "VICC"
+      ],
+      "cbioportal_study_id": "prostate_public_genie_bpc",
+      "sources": {
+        "aacr_page": "https://aacrprojectgenie.org/data/prostate-1-0-public/",
+        "data_guide_url": "https://www.aacr.org/wp-content/uploads/2026/03/GENIE-BPC-Prostate-v1.0-public-Analytic-Data-Guide.pdf",
+        "variable_synopsis_url": "https://www.aacr.org/wp-content/uploads/2026/03/GENIE-BPC-Prostate-v1.0-public-Variable-Synopsis.xlsx"
+      },
+      "documentation": {
+        "data_guide": {
+          "synapse_id": "syn73719286",
+          "filename": "GENIE BPC Prostate v1.0-public Analytic Data Guide.pdf"
+        },
+        "release_notes": {
+          "synapse_id": "syn73719285",
+          "filename": "GENIE BPC Prostate v1.0-public Release Notes.pdf"
+        },
+        "variable_synopsis": {
+          "synapse_id": "syn73719287",
+          "filename": "GENIE BPC Prostate v1.0-public Variable Synopsis.xlsx"
+        }
+      },
+      "files": {
+        "clinical": {
+          "radiation": {
+            "synapse_id": "syn73963157",
+            "filename": "ca_radtx_dataset.csv"
+          },
+          "cancer_index": {
+            "synapse_id": "syn73963154",
+            "filename": "cancer_level_dataset_index.csv"
+          },
+          "cancer_non_index": {
+            "synapse_id": "syn73963156",
+            "filename": "cancer_level_dataset_non_index.csv"
+          },
+          "cpt": {
+            "synapse_id": "syn73963160",
+            "filename": "cancer_panel_test_level_dataset.csv"
+          },
+          "imaging": {
+            "synapse_id": "syn73963151",
+            "filename": "imaging_level_dataset.csv"
+          },
+          "med_onc": {
+            "synapse_id": "syn73963152",
+            "filename": "med_onc_note_level_dataset.csv"
+          },
+          "pathology": {
+            "synapse_id": "syn73963158",
+            "filename": "pathology_report_level_dataset.csv"
+          },
+          "patient": {
+            "synapse_id": "syn73963159",
+            "filename": "patient_level_dataset.csv"
+          },
+          "regimen": {
+            "synapse_id": "syn73963155",
+            "filename": "regimen_cancer_level_dataset.csv"
+          },
+          "tumor_marker": {
+            "synapse_id": "syn73963153",
+            "filename": "tm_level_dataset.csv"
+          }
+        },
+        "genomic": {
+          "cna": {
+            "synapse_id": "syn73963221",
+            "filename": "data_CNA.txt"
+          },
+          "cna_seg": {
+            "synapse_id": "syn73963229",
+            "filename": "data_cna_hg19.seg"
+          },
+          "gene_matrix": {
+            "synapse_id": "syn73963213",
+            "filename": "data_gene_matrix.txt"
+          },
+          "mutations": {
+            "synapse_id": "syn73963210",
+            "filename": "data_mutations_extended.txt"
+          },
+          "sv": {
+            "synapse_id": "syn73963220",
+            "filename": "data_sv.txt"
+          },
+          "genomic_information": {
+            "synapse_id": "syn73963200",
+            "filename": "genomic_information.txt"
+          },
+          "tmb": {
+            "synapse_id": "syn74833566",
+            "filename": "tmb.tsv"
+          }
+        },
+        "cbioportal_clinical": {
+          "clinical_patient": {
+            "synapse_id": "syn73963217",
+            "filename": "data_clinical_patient.txt"
+          },
+          "clinical_sample": {
+            "synapse_id": "syn73963219",
+            "filename": "data_clinical_sample.txt"
+          },
+          "supp_survival": {
+            "synapse_id": "syn73963224",
+            "filename": "data_clinical_supp_survival.txt"
+          },
+          "supp_survival_treatment": {
+            "synapse_id": "syn73963214",
+            "filename": "data_clinical_supp_survival_treatment.txt"
+          }
+        },
+        "cbioportal_timeline": {
+          "cancer_diagnosis": {
+            "synapse_id": "syn73963205",
+            "filename": "data_timeline_cancer_diagnosis.txt"
+          },
+          "imaging": {
+            "synapse_id": "syn73963218",
+            "filename": "data_timeline_imaging.txt"
+          },
+          "labtest": {
+            "synapse_id": "syn73963216",
+            "filename": "data_timeline_labtest.txt"
+          },
+          "medonc": {
+            "synapse_id": "syn73963194",
+            "filename": "data_timeline_medonc.txt"
+          },
+          "pathology": {
+            "synapse_id": "syn73963211",
+            "filename": "data_timeline_pathology.txt"
+          },
+          "sample_acquisition": {
+            "synapse_id": "syn73963209",
+            "filename": "data_timeline_sample_acquisition.txt"
+          },
+          "sequencing": {
+            "synapse_id": "syn73963195",
+            "filename": "data_timeline_sequencing.txt"
+          },
+          "treatment": {
+            "synapse_id": "syn73963212",
+            "filename": "data_timeline_treatment.txt"
+          }
+        },
+        "gene_panels": [
+          {
+            "synapse_id": "syn73963232",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-1.txt",
+            "panel": "DFCI-ONCOPANEL-1"
+          },
+          {
+            "synapse_id": "syn73963234",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-2.txt",
+            "panel": "DFCI-ONCOPANEL-2"
+          },
+          {
+            "synapse_id": "syn73963223",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-3.txt",
+            "panel": "DFCI-ONCOPANEL-3"
+          },
+          {
+            "synapse_id": "syn73963235",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-3.1.txt",
+            "panel": "DFCI-ONCOPANEL-3.1"
+          },
+          {
+            "synapse_id": "syn73963236",
+            "filename": "data_gene_panel_MSK-IMPACT341.txt",
+            "panel": "MSK-IMPACT341"
+          },
+          {
+            "synapse_id": "syn73963233",
+            "filename": "data_gene_panel_MSK-IMPACT410.txt",
+            "panel": "MSK-IMPACT410"
+          },
+          {
+            "synapse_id": "syn73963222",
+            "filename": "data_gene_panel_MSK-IMPACT468.txt",
+            "panel": "MSK-IMPACT468"
+          },
+          {
+            "synapse_id": "syn73963226",
+            "filename": "data_gene_panel_UHN-48-V1.txt",
+            "panel": "UHN-48-V1"
+          },
+          {
+            "synapse_id": "syn73963231",
+            "filename": "data_gene_panel_UHN-50-V2.txt",
+            "panel": "UHN-50-V2"
+          },
+          {
+            "synapse_id": "syn73963215",
+            "filename": "data_gene_panel_UHN-555-PROSTATE-V1.txt",
+            "panel": "UHN-555-PROSTATE-V1"
+          },
+          {
+            "synapse_id": "syn73963228",
+            "filename": "data_gene_panel_UHN-555-V1.txt",
+            "panel": "UHN-555-V1"
+          },
+          {
+            "synapse_id": "syn73963227",
+            "filename": "data_gene_panel_UHN-OCA-V3.txt",
+            "panel": "UHN-OCA-V3"
+          },
+          {
+            "synapse_id": "syn73963230",
+            "filename": "data_gene_panel_VICC-01-T5A.txt",
+            "panel": "VICC-01-T5A"
+          },
+          {
+            "synapse_id": "syn73963225",
+            "filename": "data_gene_panel_VICC-01-T7.txt",
+            "panel": "VICC-01-T7"
+          }
+        ],
+        "case_lists": [
+          {
+            "synapse_id": "syn73963176",
+            "filename": "cases_Prostate_Cancer.txt"
+          },
+          {
+            "synapse_id": "syn73963174",
+            "filename": "cases_all.txt"
+          },
+          {
+            "synapse_id": "syn73963175",
+            "filename": "cases_cna.txt"
+          },
+          {
+            "synapse_id": "syn73963179",
+            "filename": "cases_cnaseq.txt"
+          },
+          {
+            "synapse_id": "syn73963178",
+            "filename": "cases_sequenced.txt"
+          },
+          {
+            "synapse_id": "syn73963177",
+            "filename": "cases_sv.txt"
+          }
+        ],
+        "meta": [
+          {
+            "synapse_id": "syn73963203",
+            "filename": "meta_CNA.txt"
+          },
+          {
+            "synapse_id": "syn73963193",
+            "filename": "meta_clinical_patient.txt"
+          },
+          {
+            "synapse_id": "syn73963206",
+            "filename": "meta_clinical_sample.txt"
+          },
+          {
+            "synapse_id": "syn73963196",
+            "filename": "meta_cna_hg19_seg.txt"
+          },
+          {
+            "synapse_id": "syn73963204",
+            "filename": "meta_gene_matrix.txt"
+          },
+          {
+            "synapse_id": "syn73963198",
+            "filename": "meta_mutations_extended.txt"
+          },
+          {
+            "synapse_id": "syn73963189",
+            "filename": "meta_study.txt"
+          },
+          {
+            "synapse_id": "syn73963207",
+            "filename": "meta_sv.txt"
+          },
+          {
+            "synapse_id": "syn73963208",
+            "filename": "meta_timeline_cancer_diagnosis.txt"
+          },
+          {
+            "synapse_id": "syn73963201",
+            "filename": "meta_timeline_imaging.txt"
+          },
+          {
+            "synapse_id": "syn73963190",
+            "filename": "meta_timeline_labtest.txt"
+          },
+          {
+            "synapse_id": "syn73963199",
+            "filename": "meta_timeline_medonc.txt"
+          },
+          {
+            "synapse_id": "syn73963202",
+            "filename": "meta_timeline_pathology.txt"
+          },
+          {
+            "synapse_id": "syn73963197",
+            "filename": "meta_timeline_sample_acquisition.txt"
+          },
+          {
+            "synapse_id": "syn73963192",
+            "filename": "meta_timeline_sequencing.txt"
+          },
+          {
+            "synapse_id": "syn73963191",
+            "filename": "meta_timeline_treatment.txt"
+          }
+        ],
+        "other": []
+      }
+    },
+    {
+      "cohort": "BLADDER",
+      "version": "v1.0-public",
+      "label": "BLADDER v1.0-public",
+      "full_name": "Bladder Cancer",
+      "schema_generation": 2,
+      "cohort_folder": "syn74221312",
+      "release_folder": "syn75201334",
+      "release_folder_created_on": "2026-05-28T19:19:22.301Z",
+      "release_folder_modified_on": "2026-06-01T21:42:32.470Z",
+      "n_patients": 716,
+      "institutions": [
+        "DFCI",
+        "MSK",
+        "UHN",
+        "VICC"
+      ],
+      "cbioportal_study_id": "bladder_public_genie_bpc",
+      "sources": {
+        "aacr_page": "https://aacrprojectgenie.org/data/bpc-bladder-v1-0-public/",
+        "data_guide_url": "https://aacrprojectgenie.org/wp-content/uploads/2026/09/GENIE-BPC-BLADDER-1.0-public-Analytic-Data-Guide.pdf",
+        "variable_synopsis_url": "https://aacrprojectgenie.org/wp-content/uploads/2026/08/GENIE-BPC-Bladder-v1.0-public-Variable-Synopsis.xlsx"
+      },
+      "documentation": {
+        "data_guide": {
+          "synapse_id": "syn74221362",
+          "filename": "GENIE BPC BLADDER v1.0-public Analytic Data Guide.pdf"
+        },
+        "release_notes": {
+          "synapse_id": "syn74221360",
+          "filename": "GENIE BPC BLADDER v1.0-public Release Notes.pdf"
+        },
+        "variable_synopsis": {
+          "synapse_id": "syn74221361",
+          "filename": "GENIE BPC BLADDER v1.0-public Variable Synopsis.xlsx"
+        }
+      },
+      "files": {
+        "clinical": {
+          "radiation": {
+            "synapse_id": "syn75201442",
+            "filename": "ca_radtx_dataset.csv"
+          },
+          "cancer_index": {
+            "synapse_id": "syn75201447",
+            "filename": "cancer_level_dataset_index.csv"
+          },
+          "cancer_non_index": {
+            "synapse_id": "syn75201450",
+            "filename": "cancer_level_dataset_non_index.csv"
+          },
+          "cpt": {
+            "synapse_id": "syn75201451",
+            "filename": "cancer_panel_test_level_dataset.csv"
+          },
+          "imaging": {
+            "synapse_id": "syn75201452",
+            "filename": "imaging_level_dataset.csv"
+          },
+          "med_onc": {
+            "synapse_id": "syn75201453",
+            "filename": "med_onc_note_level_dataset.csv"
+          },
+          "pathology": {
+            "synapse_id": "syn75201454",
+            "filename": "pathology_report_level_dataset.csv"
+          },
+          "patient": {
+            "synapse_id": "syn75201456",
+            "filename": "patient_level_dataset.csv"
+          },
+          "regimen": {
+            "synapse_id": "syn75201457",
+            "filename": "regimen_cancer_level_dataset.csv"
+          }
+        },
+        "genomic": {
+          "cna": {
+            "synapse_id": "syn75201351",
+            "filename": "data_CNA.txt"
+          },
+          "cna_seg": {
+            "synapse_id": "syn75201361",
+            "filename": "data_cna_hg19.seg"
+          },
+          "gene_matrix": {
+            "synapse_id": "syn75201363",
+            "filename": "data_gene_matrix.txt"
+          },
+          "mutations": {
+            "synapse_id": "syn75201388",
+            "filename": "data_mutations_extended.txt"
+          },
+          "sv": {
+            "synapse_id": "syn75201389",
+            "filename": "data_sv.txt"
+          },
+          "genomic_information": {
+            "synapse_id": "syn75201414",
+            "filename": "genomic_information.txt"
+          }
+        },
+        "cbioportal_clinical": {
+          "clinical_patient": {
+            "synapse_id": "syn75201352",
+            "filename": "data_clinical_patient.txt"
+          },
+          "clinical_sample": {
+            "synapse_id": "syn75201353",
+            "filename": "data_clinical_sample.txt"
+          },
+          "supp_survival": {
+            "synapse_id": "syn75201357",
+            "filename": "data_clinical_supp_survival.txt"
+          },
+          "supp_survival_treatment": {
+            "synapse_id": "syn75201358",
+            "filename": "data_clinical_supp_survival_treatment.txt"
+          }
+        },
+        "cbioportal_timeline": {
+          "cancer_diagnosis": {
+            "synapse_id": "syn75201390",
+            "filename": "data_timeline_cancer_diagnosis.txt"
+          },
+          "imaging": {
+            "synapse_id": "syn75201391",
+            "filename": "data_timeline_imaging.txt"
+          },
+          "medonc": {
+            "synapse_id": "syn75201395",
+            "filename": "data_timeline_medonc.txt"
+          },
+          "pathology": {
+            "synapse_id": "syn75201396",
+            "filename": "data_timeline_pathology.txt"
+          },
+          "performance_status": {
+            "synapse_id": "syn75201397",
+            "filename": "data_timeline_performance_status.txt"
+          },
+          "sample_acquisition": {
+            "synapse_id": "syn75201401",
+            "filename": "data_timeline_sample_acquisition.txt"
+          },
+          "sequencing": {
+            "synapse_id": "syn75201405",
+            "filename": "data_timeline_sequencing.txt"
+          },
+          "treatment": {
+            "synapse_id": "syn75201407",
+            "filename": "data_timeline_treatment.txt"
+          }
+        },
+        "gene_panels": [
+          {
+            "synapse_id": "syn75201365",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-1.txt",
+            "panel": "DFCI-ONCOPANEL-1"
+          },
+          {
+            "synapse_id": "syn75201367",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-2.txt",
+            "panel": "DFCI-ONCOPANEL-2"
+          },
+          {
+            "synapse_id": "syn75201370",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-3.txt",
+            "panel": "DFCI-ONCOPANEL-3"
+          },
+          {
+            "synapse_id": "syn75201369",
+            "filename": "data_gene_panel_DFCI-ONCOPANEL-3.1.txt",
+            "panel": "DFCI-ONCOPANEL-3.1"
+          },
+          {
+            "synapse_id": "syn75201371",
+            "filename": "data_gene_panel_MSK-IMPACT341.txt",
+            "panel": "MSK-IMPACT341"
+          },
+          {
+            "synapse_id": "syn75201372",
+            "filename": "data_gene_panel_MSK-IMPACT410.txt",
+            "panel": "MSK-IMPACT410"
+          },
+          {
+            "synapse_id": "syn75201373",
+            "filename": "data_gene_panel_MSK-IMPACT468.txt",
+            "panel": "MSK-IMPACT468"
+          },
+          {
+            "synapse_id": "syn75201375",
+            "filename": "data_gene_panel_UHN-48-V1.txt",
+            "panel": "UHN-48-V1"
+          },
+          {
+            "synapse_id": "syn75201377",
+            "filename": "data_gene_panel_UHN-50-V2.txt",
+            "panel": "UHN-50-V2"
+          },
+          {
+            "synapse_id": "syn75201379",
+            "filename": "data_gene_panel_UHN-555-BLADDER-V1.txt",
+            "panel": "UHN-555-BLADDER-V1"
+          },
+          {
+            "synapse_id": "syn75201383",
+            "filename": "data_gene_panel_UHN-555-V1.txt",
+            "panel": "UHN-555-V1"
+          },
+          {
+            "synapse_id": "syn75201384",
+            "filename": "data_gene_panel_UHN-OCA-V3.txt",
+            "panel": "UHN-OCA-V3"
+          },
+          {
+            "synapse_id": "syn75201385",
+            "filename": "data_gene_panel_VICC-01-SOLIDTUMOR.txt",
+            "panel": "VICC-01-SOLIDTUMOR"
+          },
+          {
+            "synapse_id": "syn75201386",
+            "filename": "data_gene_panel_VICC-01-T5A.txt",
+            "panel": "VICC-01-T5A"
+          },
+          {
+            "synapse_id": "syn75201387",
+            "filename": "data_gene_panel_VICC-01-T7.txt",
+            "panel": "VICC-01-T7"
+          }
+        ],
+        "case_lists": [
+          {
+            "synapse_id": "syn75201342",
+            "filename": "cases_Bladder_Cancer.txt"
+          },
+          {
+            "synapse_id": "syn75201343",
+            "filename": "cases_all.txt"
+          },
+          {
+            "synapse_id": "syn75201344",
+            "filename": "cases_cna.txt"
+          },
+          {
+            "synapse_id": "syn75201346",
+            "filename": "cases_cnaseq.txt"
+          },
+          {
+            "synapse_id": "syn75201349",
+            "filename": "cases_sequenced.txt"
+          },
+          {
+            "synapse_id": "syn75201350",
+            "filename": "cases_sv.txt"
+          }
+        ],
+        "meta": [
+          {
+            "synapse_id": "syn75201415",
+            "filename": "meta_CNA.txt"
+          },
+          {
+            "synapse_id": "syn75201416",
+            "filename": "meta_clinical_patient.txt"
+          },
+          {
+            "synapse_id": "syn75201417",
+            "filename": "meta_clinical_sample.txt"
+          },
+          {
+            "synapse_id": "syn75201420",
+            "filename": "meta_cna_hg19_seg.txt"
+          },
+          {
+            "synapse_id": "syn75201421",
+            "filename": "meta_gene_matrix.txt"
+          },
+          {
+            "synapse_id": "syn75201422",
+            "filename": "meta_mutations_extended.txt"
+          },
+          {
+            "synapse_id": "syn75201423",
+            "filename": "meta_study.txt"
+          },
+          {
+            "synapse_id": "syn75201426",
+            "filename": "meta_sv.txt"
+          },
+          {
+            "synapse_id": "syn75201427",
+            "filename": "meta_timeline_cancer_diagnosis.txt"
+          },
+          {
+            "synapse_id": "syn75201431",
+            "filename": "meta_timeline_imaging.txt"
+          },
+          {
+            "synapse_id": "syn75201435",
+            "filename": "meta_timeline_medonc.txt"
+          },
+          {
+            "synapse_id": "syn75201436",
+            "filename": "meta_timeline_pathology.txt"
+          },
+          {
+            "synapse_id": "syn75201437",
+            "filename": "meta_timeline_performance_status.txt"
+          },
+          {
+            "synapse_id": "syn75201438",
+            "filename": "meta_timeline_sample_acquisition.txt"
+          },
+          {
+            "synapse_id": "syn75201439",
+            "filename": "meta_timeline_sequencing.txt"
+          },
+          {
+            "synapse_id": "syn75201440",
+            "filename": "meta_timeline_treatment.txt"
+          }
+        ],
+        "other": []
+      }
+    }
+  ]
+}
