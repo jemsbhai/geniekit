@@ -1,0 +1,206 @@
+label,agents,drug_class,drug_subclass,lot_role,cohorts_observed,note
+Abemaciclib,Abemaciclib,targeted,CDK4/6 inhibitor,systemic,BrCa,
+Abiraterone Acetate,Abiraterone,endocrine,androgen receptor pathway inhibitor,systemic,"BLADDER,CRC,NSCLC,PANC,Prostate",CYP17 inhibitor
+Acalabrutinib,Acalabrutinib,targeted,BTK inhibitor,systemic,"NSCLC,Prostate",
+ADT LHRH agonist not specified,LHRH agonist (unspecified),endocrine,LHRH agonist,backbone,"BLADDER,Prostate",
+Afatinib Dimaleate,Afatinib,targeted,EGFR tyrosine kinase inhibitor,systemic,"BLADDER,NSCLC",
+Aldesleukin,Aldesleukin,immunotherapy,interleukin-2,systemic,"NSCLC,Prostate",
+Alectinib,Alectinib,targeted,ALK tyrosine kinase inhibitor,systemic,"CRC,NSCLC",
+Alpelisib,Alpelisib,targeted,PI3K inhibitor,systemic,BrCa,
+Anastrozole,Anastrozole,endocrine,aromatase inhibitor,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC",
+Apalutamide,Apalutamide,endocrine,androgen receptor pathway inhibitor,systemic,"CRC,Prostate",
+Apatinib,Apatinib,targeted,VEGFR tyrosine kinase inhibitor,systemic,BrCa,
+Arsenic Trioxide,Arsenic trioxide,chemotherapy,other,systemic,NSCLC,
+Atezolizumab,Atezolizumab,immunotherapy,PD-L1 inhibitor,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Autologous Melanoma Lysate Pulsed Dendritic Cell Vaccine,Autologous dendritic cell vaccine,immunotherapy,cancer vaccine,systemic,Prostate,
+Avelumab,Avelumab,immunotherapy,PD-L1 inhibitor,systemic,"BLADDER,NSCLC,PANC,Prostate",
+Azacitidine,Azacitidine,chemotherapy,antimetabolite,systemic,"BLADDER,CRC,PANC,Prostate",hypomethylating agent
+BCG Solution,BCG,immunotherapy,BCG,local,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",intravesical
+BCG Vaccine,BCG,immunotherapy,BCG,local,"BLADDER,CRC,NSCLC,PANC,Prostate",intravesical
+Bendamustine,Bendamustine,chemotherapy,alkylating agent,systemic,"BrCa,Prostate",
+Bendamustine Hydrochloride,Bendamustine,chemotherapy,alkylating agent,systemic,NSCLC,
+Bevacizumab,Bevacizumab,targeted,VEGF antibody,systemic,"BLADDER,BrCa,CRC,NSCLC,Prostate",
+Bicalutamide,Bicalutamide,endocrine,first-generation antiandrogen,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Binimetinib,Binimetinib,targeted,MEK inhibitor,systemic,"CRC,Prostate",
+Bleomycin,Bleomycin,chemotherapy,antitumor antibiotic,systemic,"BLADDER,CRC,NSCLC,PANC",
+Bortezomib,Bortezomib,targeted,proteasome inhibitor,systemic,"BLADDER,CRC,NSCLC,PANC,Prostate",
+Bosutinib,Bosutinib,targeted,BCR-ABL tyrosine kinase inhibitor,systemic,PANC,
+Brentuximab Vedotin,Brentuximab vedotin,antibody-drug conjugate,CD30 antibody-drug conjugate,systemic,Prostate,
+Brigatinib,Brigatinib,targeted,ALK tyrosine kinase inhibitor,systemic,NSCLC,
+Busulfan,Busulfan,chemotherapy,alkylating agent,systemic,"NSCLC,PANC",
+Cabazitaxel,Cabazitaxel,chemotherapy,taxane,systemic,Prostate,
+Cabozantinib Smalate,Cabozantinib,targeted,multikinase inhibitor,systemic,"CRC,NSCLC,Prostate","MET, VEGFR, RET"
+Capecitabine,Capecitabine,chemotherapy,antimetabolite,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",fluoropyrimidine
+Carboplatin,Carboplatin,chemotherapy,platinum,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Carfilzomib,Carfilzomib,targeted,proteasome inhibitor,systemic,"BLADDER,NSCLC",
+Carmustine,Carmustine,chemotherapy,alkylating agent,systemic,"CRC,Prostate",nitrosourea
+Ceritinib,Ceritinib,targeted,ALK tyrosine kinase inhibitor,systemic,"CRC,NSCLC",
+Cetuximab,Cetuximab,targeted,EGFR antibody,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Chlorambucil,Chlorambucil,chemotherapy,alkylating agent,systemic,"CRC,NSCLC",
+Cisplatin,Cisplatin,chemotherapy,platinum,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Cladribine,Cladribine,chemotherapy,antimetabolite,systemic,PANC,purine analogue
+Cobimetinib,Cobimetinib,targeted,MEK inhibitor,systemic,"CRC,NSCLC,PANC",
+Crizotinib,Crizotinib,targeted,ALK tyrosine kinase inhibitor,systemic,"NSCLC,Prostate","ALK, ROS1, MET"
+Cyclophosphamide,Cyclophosphamide,chemotherapy,alkylating agent,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Cytarabine,Cytarabine,chemotherapy,antimetabolite,systemic,"CRC,NSCLC,PANC,Prostate",
+Cytarabine liposomal,Cytarabine liposomal,chemotherapy,antimetabolite,systemic,"CRC,Prostate",liposomal formulation
+Dabrafenib,Dabrafenib,targeted,BRAF inhibitor,systemic,"CRC,NSCLC,PANC,Prostate",
+Dacarbazine,Dacarbazine,chemotherapy,alkylating agent,systemic,"BrCa,CRC,NSCLC,PANC",
+Dactinomycin,Dactinomycin,chemotherapy,antitumor antibiotic,systemic,"BLADDER,CRC",
+Daratumumab,Daratumumab,targeted,CD38 antibody,systemic,"NSCLC,Prostate",
+Darolutamide,Darolutamide,endocrine,androgen receptor pathway inhibitor,systemic,"BLADDER,Prostate",
+Dasatinib,Dasatinib,targeted,BCR-ABL tyrosine kinase inhibitor,systemic,"BrCa,NSCLC,PANC",
+Daunorubicin Hydrochloride,Daunorubicin,chemotherapy,anthracycline,systemic,CRC,
+Decitabine,Decitabine,chemotherapy,antimetabolite,systemic,NSCLC,hypomethylating agent
+Degarelix,Degarelix,endocrine,LHRH antagonist,backbone,"BLADDER,CRC,NSCLC,PANC,Prostate",
+Docetaxel,Docetaxel,chemotherapy,taxane,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Doxorubicin HCL,Doxorubicin,chemotherapy,anthracycline,systemic,"BLADDER,BrCa,PANC,Prostate",
+Doxorubicin Hydrochloride,Doxorubicin,chemotherapy,anthracycline,systemic,"CRC,NSCLC",
+Durvalumab,Durvalumab,immunotherapy,PD-L1 inhibitor,systemic,"BLADDER,CRC,NSCLC",
+Dutasteride,Dutasteride,other,5-alpha-reductase inhibitor,other,Prostate,not an antineoplastic
+Elotuzumab,Elotuzumab,targeted,SLAMF7 antibody,systemic,BLADDER,
+Encorafenib,Encorafenib,targeted,BRAF inhibitor,systemic,"CRC,Prostate",
+Enfortumab Vedotin,Enfortumab vedotin,antibody-drug conjugate,Nectin-4 antibody-drug conjugate,systemic,BLADDER,
+Ensartinib,Ensartinib,targeted,ALK tyrosine kinase inhibitor,systemic,NSCLC,
+Entrectinib,Entrectinib,targeted,NTRK/ROS1 tyrosine kinase inhibitor,systemic,NSCLC,
+Enzalutamide,Enzalutamide,endocrine,androgen receptor pathway inhibitor,systemic,"BLADDER,CRC,PANC,Prostate",
+Epirubicin HCL,Epirubicin,chemotherapy,anthracycline,systemic,"BLADDER,BrCa,PANC",
+Epirubicin Hydrochloride,Epirubicin,chemotherapy,anthracycline,systemic,"CRC,NSCLC",
+Erdafitinib,Erdafitinib,targeted,FGFR inhibitor,systemic,BLADDER,
+Eribulin Mesylate,Eribulin,chemotherapy,microtubule inhibitor,systemic,"BrCa,PANC",halichondrin analogue
+Erlotinib HCL,Erlotinib,targeted,EGFR tyrosine kinase inhibitor,systemic,"BLADDER,BrCa,PANC,Prostate",
+Erlotinib Hydrochloride,Erlotinib,targeted,EGFR tyrosine kinase inhibitor,systemic,NSCLC,
+Estramustine,Estramustine,chemotherapy,other,systemic,"BLADDER,Prostate",estradiol-nitrogen mustard conjugate
+Etoposide,Etoposide,chemotherapy,topoisomerase II inhibitor,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Etoposide Phosphate,Etoposide,chemotherapy,topoisomerase II inhibitor,systemic,"NSCLC,Prostate",prodrug of etoposide
+Everolimus,Everolimus,targeted,mTOR inhibitor,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Exemestane,Exemestane,endocrine,aromatase inhibitor,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC",
+Floxuridine,Floxuridine,chemotherapy,antimetabolite,systemic,"BrCa,CRC,Prostate",fluoropyrimidine; often hepatic arterial
+Fludarabine Phosphate,Fludarabine,chemotherapy,antimetabolite,systemic,"BLADDER,CRC,NSCLC,PANC",purine analogue
+Fluorouracil,Fluorouracil,chemotherapy,antimetabolite,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",fluoropyrimidine
+Flutamide,Flutamide,endocrine,first-generation antiandrogen,systemic,"BLADDER,Prostate",
+Fulvestrant,Fulvestrant,endocrine,selective estrogen receptor degrader,systemic,"BrCa,CRC,PANC",
+Gefitinib,Gefitinib,targeted,EGFR tyrosine kinase inhibitor,systemic,NSCLC,
+Gemcitabine HCL,Gemcitabine,chemotherapy,antimetabolite,systemic,"BLADDER,BrCa,PANC,Prostate",
+Gemcitabine Hydrochloride,Gemcitabine,chemotherapy,antimetabolite,systemic,"CRC,NSCLC",
+Goserlin Acetate,Goserelin,endocrine,LHRH agonist,backbone,"BLADDER,BrCa,Prostate",released label is misspelled
+Histrelin Acetate,Histrelin,endocrine,LHRH agonist,backbone,Prostate,
+Hydroxyurea,Hydroxyurea,chemotherapy,antimetabolite,systemic,"NSCLC,PANC,Prostate",
+Ibrutinib,Ibrutinib,targeted,BTK inhibitor,systemic,"BLADDER,NSCLC,Prostate",
+Icotinib,Icotinib,targeted,EGFR tyrosine kinase inhibitor,systemic,NSCLC,
+Ifosfamide,Ifosfamide,chemotherapy,alkylating agent,systemic,"BLADDER,BrCa,CRC,PANC,Prostate",
+Imatinib Mesylate,Imatinib,targeted,BCR-ABL tyrosine kinase inhibitor,systemic,"BLADDER,CRC,NSCLC,PANC","also KIT, PDGFR"
+Interferon,Interferon (unspecified),immunotherapy,interferon,systemic,"BLADDER,Prostate",
+Interferon Alfacon1,Interferon alfacon-1,immunotherapy,interferon,systemic,"BLADDER,CRC",
+Investigational Drug,Investigational Drug,investigational,investigational,investigational,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",identity masked
+Iodine I 131 Tositumomab,Iodine-131 tositumomab,radiopharmaceutical,radiolabelled CD20 antibody,systemic,BLADDER,
+Ipilimumab,Ipilimumab,immunotherapy,CTLA-4 inhibitor,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Irinotecan HCL,Irinotecan,chemotherapy,topoisomerase I inhibitor,systemic,"BLADDER,BrCa,PANC,Prostate",
+Irinotecan Hydrochloride,Irinotecan,chemotherapy,topoisomerase I inhibitor,systemic,"CRC,NSCLC",
+Irinotecan liposome,Irinotecan liposomal,chemotherapy,topoisomerase I inhibitor,systemic,"BrCa,CRC,PANC",liposomal formulation
+Ixabepilone,Ixabepilone,chemotherapy,epothilone,systemic,BrCa,
+Ixazomib Citrate,Ixazomib,targeted,proteasome inhibitor,systemic,Prostate,
+Ketoconazole,Ketoconazole,endocrine,androgen synthesis inhibitor,systemic,Prostate,historical CRPC therapy
+Lanreotide Acetate,Lanreotide,targeted,somatostatin analogue,systemic,"CRC,NSCLC",
+Lapatinib Ditosylate,Lapatinib,targeted,HER2 tyrosine kinase inhibitor,systemic,"BrCa,CRC",
+Larotrectinib,Larotrectinib,targeted,NTRK tyrosine kinase inhibitor,systemic,BrCa,
+Lenalidomide,Lenalidomide,targeted,immunomodulatory imide,systemic,"BLADDER,CRC,NSCLC,PANC,Prostate",
+Lenvatinib Mesylate,Lenvatinib,targeted,multikinase inhibitor,systemic,BrCa,"VEGFR, FGFR, RET"
+Letrozole,Letrozole,endocrine,aromatase inhibitor,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC",
+Leucovorin,Leucovorin,other,folate biomodulator,modulator,"BLADDER,BrCa,PANC,Prostate",not an antineoplastic
+Leucovorin Calcium,Leucovorin,other,folate biomodulator,modulator,"CRC,NSCLC",not an antineoplastic
+Leuprolide,Leuprolide,endocrine,LHRH agonist,backbone,"BLADDER,BrCa,PANC,Prostate",
+Leuprolide Acetate,Leuprolide,endocrine,LHRH agonist,backbone,"CRC,NSCLC",
+Lomustine,Lomustine,chemotherapy,alkylating agent,systemic,"CRC,NSCLC",nitrosourea
+Lorlatinib,Lorlatinib,targeted,ALK tyrosine kinase inhibitor,systemic,NSCLC,
+Lurbinectedin,Lurbinectedin,chemotherapy,other,systemic,"BrCa,NSCLC",DNA minor-groove binder
+Lutetium Lu 177 Dotatate,Lutetium-177 dotatate,radiopharmaceutical,radiolabelled somatostatin analogue,systemic,"CRC,Prostate",
+Mechlorethamine Hydrochloride,Mechlorethamine,chemotherapy,alkylating agent,systemic,"CRC,NSCLC",
+Megestrol Acetate,Megestrol,endocrine,progestin,systemic,"BrCa,CRC,NSCLC",
+Melphalan,Melphalan,chemotherapy,alkylating agent,systemic,"BLADDER,CRC,PANC,Prostate",
+Methotrexate,Methotrexate,chemotherapy,antimetabolite,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC",antifolate
+Methoxsalen,Methoxsalen,other,psoralen,other,PANC,photopheresis agent; not an antineoplastic
+Mitomycin,Mitomycin,chemotherapy,antitumor antibiotic,systemic,"BLADDER,CRC,NSCLC,PANC,Prostate",intravesical in bladder cancer: see route
+Mitotane,Mitotane,other,adrenolytic,systemic,Prostate,
+Mitoxantrone HCL,Mitoxantrone,chemotherapy,anthracenedione,systemic,"PANC,Prostate",
+Nabpaclitaxel,Nab-paclitaxel,chemotherapy,taxane,systemic,"BLADDER,BrCa,NSCLC,PANC,Prostate",albumin-bound formulation
+Navitoclax,Navitoclax,targeted,BCL-2 family inhibitor,systemic,NSCLC,investigational agent
+Necitumumab,Necitumumab,targeted,EGFR antibody,systemic,NSCLC,
+Neratinib,Neratinib,targeted,HER2 tyrosine kinase inhibitor,systemic,"BrCa,CRC,NSCLC",
+Nilotinib,Nilotinib,targeted,BCR-ABL tyrosine kinase inhibitor,systemic,PANC,
+Nilutamide,Nilutamide,endocrine,first-generation antiandrogen,systemic,"BLADDER,Prostate",
+Nivolumab,Nivolumab,immunotherapy,PD-1 inhibitor,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Obinutuzumab,Obinutuzumab,targeted,CD20 antibody,systemic,Prostate,
+Octreotide,Octreotide,targeted,somatostatin analogue,systemic,"CRC,PANC",
+Olaparib,Olaparib,targeted,PARP inhibitor,systemic,"BrCa,CRC,NSCLC,PANC,Prostate",
+Olaratumab,Olaratumab,targeted,PDGFR-alpha antibody,systemic,"BLADDER,BrCa",
+Osimertinib,Osimertinib,targeted,EGFR tyrosine kinase inhibitor,systemic,"NSCLC,Prostate",
+Other antineoplastic,Other antineoplastic,other,unspecified,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",identity not recorded
+Other hormone,Other hormone,endocrine,unspecified,systemic,"BrCa,NSCLC,Prostate",identity not recorded
+Other NOS,Other (not otherwise specified),other,unspecified,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",identity not recorded
+Oxaliplatin,Oxaliplatin,chemotherapy,platinum,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Paclitaxel,Paclitaxel,chemotherapy,taxane,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Paclitaxel Loaded Polymeric Micelle,Paclitaxel micellar,chemotherapy,taxane,systemic,"BrCa,NSCLC",micellar formulation
+Paclitaxel Poliglumex,Paclitaxel poliglumex,chemotherapy,taxane,systemic,NSCLC,polymer conjugate
+Paclitaxel Trevatide,Paclitaxel trevatide,chemotherapy,taxane,systemic,"BLADDER,NSCLC",peptide conjugate
+Palbociclib,Palbociclib,targeted,CDK4/6 inhibitor,systemic,"BLADDER,BrCa,NSCLC,PANC,Prostate",
+Panitumumab,Panitumumab,targeted,EGFR antibody,systemic,"BLADDER,CRC,PANC,Prostate",
+Pazopanib HCL,Pazopanib,targeted,multikinase inhibitor,systemic,"BLADDER,BrCa","VEGFR, PDGFR, KIT"
+Peginterferon Alfa2b,Peginterferon alfa-2b,immunotherapy,interferon,systemic,"BLADDER,PANC",
+Pegylated Liposomal Doxorubicin,Pegylated liposomal doxorubicin,chemotherapy,anthracycline,systemic,"BLADDER,BrCa,PANC",
+Pegylated Liposomal Doxorubicin Hydrochloride,Pegylated liposomal doxorubicin,chemotherapy,anthracycline,systemic,NSCLC,
+Pembrolizumab,Pembrolizumab,immunotherapy,PD-1 inhibitor,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Pemetrexed Disodium,Pemetrexed,chemotherapy,antimetabolite,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",antifolate
+Pertuzumab,Pertuzumab,targeted,HER2 antibody,systemic,"BrCa,CRC",
+Pertuzumab-Trastuzumab-Hyaluronidase-ZZXF,Pertuzumab;Trastuzumab,targeted,HER2 antibody,systemic,BrCa,fixed-dose subcutaneous combination of two agents
+Pomalidomide,Pomalidomide,targeted,immunomodulatory imide,systemic,"BLADDER,NSCLC",
+Ponatinib HCL,Ponatinib,targeted,BCR-ABL tyrosine kinase inhibitor,systemic,BrCa,
+Procarbazine HCL,Procarbazine,chemotherapy,alkylating agent,systemic,PANC,
+Procarbazine Hydrochloride,Procarbazine,chemotherapy,alkylating agent,systemic,"CRC,NSCLC",
+Radium RA 223 Dichloride,Radium-223,radiopharmaceutical,alpha emitter,systemic,Prostate,
+Ramucirumab,Ramucirumab,targeted,VEGFR2 antibody,systemic,"BrCa,CRC,NSCLC,Prostate",
+Recombinant Interferon Alfa,Interferon alfa,immunotherapy,interferon,systemic,"CRC,PANC",
+Recombinant Interferon Alfa2a,Interferon alfa-2a,immunotherapy,interferon,systemic,BLADDER,
+Regorafenib,Regorafenib,targeted,multikinase inhibitor,systemic,CRC,"VEGFR, TIE2, KIT, RET, RAF"
+Ribociclib,Ribociclib,targeted,CDK4/6 inhibitor,systemic,"BrCa,Prostate",
+Rituximab,Rituximab,targeted,CD20 antibody,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Rituximab and Hyaluronidase Human,Rituximab,targeted,CD20 antibody,systemic,"CRC,NSCLC,PANC",subcutaneous formulation
+Rociletinib,Rociletinib,targeted,EGFR tyrosine kinase inhibitor,systemic,NSCLC,investigational agent
+Rucaparib Camsylate,Rucaparib,targeted,PARP inhibitor,systemic,Prostate,
+Ruxolitinib Phosphate,Ruxolitinib,targeted,JAK inhibitor,systemic,"NSCLC,Prostate",
+Sacituzumab Govitecan,Sacituzumab govitecan,antibody-drug conjugate,Trop-2 antibody-drug conjugate,systemic,"BLADDER,BrCa",
+Sipuleucel T,Sipuleucel-T,immunotherapy,cancer vaccine,systemic,"BLADDER,Prostate",autologous cellular immunotherapy
+Sorafenib Tosylate,Sorafenib,targeted,multikinase inhibitor,systemic,"BrCa,NSCLC,Prostate","VEGFR, PDGFR, RAF"
+Sunitinib Malate,Sunitinib,targeted,multikinase inhibitor,systemic,"BLADDER,NSCLC,PANC,Prostate","VEGFR, PDGFR, KIT"
+Talazoparib,Talazoparib,targeted,PARP inhibitor,systemic,BrCa,
+Talimogene Laherparepvec,Talimogene laherparepvec,immunotherapy,oncolytic virus,local,NSCLC,intralesional
+Tamoxifen,Tamoxifen,endocrine,selective estrogen receptor modulator,systemic,"BLADDER,BrCa,PANC,Prostate",
+Tamoxifen Citrate,Tamoxifen,endocrine,selective estrogen receptor modulator,systemic,"CRC,NSCLC",
+Taselisib,Taselisib,targeted,PI3K inhibitor,systemic,BrCa,investigational agent
+Tegafurgimeraciloteracil Potassium,Tegafur-gimeracil-oteracil (S-1),chemotherapy,antimetabolite,systemic,"BrCa,CRC,PANC",fluoropyrimidine
+Temozolomide,Temozolomide,chemotherapy,alkylating agent,systemic,"BrCa,CRC,NSCLC,PANC",
+Temsirolimus,Temsirolimus,targeted,mTOR inhibitor,systemic,BLADDER,
+Thalidomide,Thalidomide,targeted,immunomodulatory imide,systemic,CRC,
+Thiotepa,Thiotepa,chemotherapy,alkylating agent,systemic,"BLADDER,NSCLC,PANC",
+Topotecan HCL,Topotecan,chemotherapy,topoisomerase I inhibitor,systemic,"BLADDER,BrCa,Prostate",
+Toremifene,Toremifene,endocrine,selective estrogen receptor modulator,systemic,BrCa,
+Trametinib,Trametinib,targeted,MEK inhibitor,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Trastuzumab,Trastuzumab,targeted,HER2 antibody,systemic,"BLADDER,BrCa,CRC,NSCLC,PANC,Prostate",
+Trastuzumab Deruxtecan,Trastuzumab deruxtecan,antibody-drug conjugate,HER2 antibody-drug conjugate,systemic,BrCa,
+Trastuzumab Emtansine,Trastuzumab emtansine,antibody-drug conjugate,HER2 antibody-drug conjugate,systemic,"BrCa,CRC,NSCLC",
+Trastuzumab/Hyaluronidase-oysk,Trastuzumab,targeted,HER2 antibody,systemic,BrCa,subcutaneous formulation
+Tremelimumab,Tremelimumab,immunotherapy,CTLA-4 inhibitor,systemic,NSCLC,
+Tretinoin,Tretinoin,other,differentiating agent,systemic,NSCLC,
+Trifluridine and Tipiracil Hydrochloride,Trifluridine/tipiracil,chemotherapy,antimetabolite,systemic,CRC,fluoropyrimidine
+Triptorelin,Triptorelin,endocrine,LHRH agonist,backbone,"BLADDER,Prostate",
+Tucatinib,Tucatinib,targeted,HER2 tyrosine kinase inhibitor,systemic,BrCa,
+Valrubicin,Valrubicin,chemotherapy,anthracycline,local,BLADDER,intravesical
+Vedolizumab,Vedolizumab,other,integrin antibody,other,BLADDER,not an antineoplastic
+Vemurafenib,Vemurafenib,targeted,BRAF inhibitor,systemic,"CRC,NSCLC,PANC",
+Venetoclax,Venetoclax,targeted,BCL-2 inhibitor,systemic,Prostate,
+Vinblastine Sulfate,Vinblastine,chemotherapy,vinca alkaloid,systemic,"BLADDER,CRC,NSCLC,PANC",
+Vincristine Sulfate,Vincristine,chemotherapy,vinca alkaloid,systemic,"BLADDER,CRC,NSCLC,PANC,Prostate",
+Vincristine Sulfate Liposome,Vincristine liposomal,chemotherapy,vinca alkaloid,systemic,"BLADDER,NSCLC,PANC",liposomal formulation
+Vinorelbine Tartrate,Vinorelbine,chemotherapy,vinca alkaloid,systemic,"BLADDER,BrCa,CRC,NSCLC,Prostate",
+Yttrium Y90 Ibritumomab Tiuxetan,Yttrium-90 ibritumomab tiuxetan,radiopharmaceutical,radiolabelled CD20 antibody,systemic,"BrCa,PANC",
+Ziv Aflibercept,Ziv-aflibercept,targeted,VEGF trap,systemic,CRC,

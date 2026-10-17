@@ -15,6 +15,7 @@ data-raw/cache/
 *.seg
 *.maf
 *.parquet
+!src/geniekit/resources/*.csv
 !src/geniekit/resources/*.csv.gz
 !tests/fixtures/**/*.csv.gz
 !tests/fixtures/**/*.txt.gz
