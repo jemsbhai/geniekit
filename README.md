@@ -21,8 +21,8 @@ GENIE access requirement (see [Data access](#data-access)).
 
 Version 0.0.1 is the first public release and contains the foundation: the
 release registry, the data dictionary, data loading and download, and the
-synthetic cohorts. The harmonisation, line-of-therapy and aggregate layers
-follow in the next minor releases.
+synthetic cohorts. The harmonisation and line-of-therapy layers are in the
+repository and follow in the next release; the aggregate layer is next.
 
 | Module | Purpose | State |
 |---|---|---|
@@ -31,7 +31,7 @@ follow in the next minor releases.
 | `geniekit.io` | Download from Synapse (personal access token, access-status check, MD5 verification, retries) and load release folders from disk into one `CohortData` object, checked against the dictionary | done |
 | `geniekit.synthetic` | Dictionary-driven synthetic cohorts: every declared column, cohort-specific naming, coherent simulated histories | done |
 | `geniekit.harmonize` | Crosswalk-driven normalisation of the six cohorts (renames, code-list collapses, spelling, types, derived variables, genomic format unification) with a provenance report; stacking across cohorts | done; metastasis-site rederivation follows |
-| `geniekit.lot` | Line-of-therapy derivation with user-defined index events | planned |
+| `geniekit.lot` | Lines of therapy from the regimen tables, counted from an index event the user chooses, with explicit rules, a drug vocabulary covering both schema generations, and a reason recorded for every assignment | done |
 | `geniekit.aggregate` | Aggregate-only analyses with disclosure control | planned |
 
 ## Installation
@@ -145,6 +145,61 @@ to one NOS code) have the same code set in both generations. The harmonised
 17-site set is rederived from the imaging and pathology site codes in a later
 step rather than approximated by renaming.
 
+Lines of therapy:
+
+```python
+from geniekit import io, lot
+
+crc = io.load_release("data/genie_bpc/CRC_v2.0-public")
+result = lot.derive(crc, index="advanced")   # lines counted from stage IV diagnosis or first distant metastasis
+result.lines                                  # one row per line: start, end, agents, backbone agents, regimens, why it ended
+result.regimens                               # every regimen with its status, line number, role and the reason
+result.cancers                                # one row per cancer: index event, number of lines, first-line agents
+result.summary()
+
+# the index event is the user's choice
+lot.derive(crc, index="first_progression")    # first radiologist or oncologist assessment of progression
+lot.derive(crc, index="first_systemic")       # start of the first line-defining regimen
+lot.derive(crc, index=my_table)               # record_id, ca_seq, index_days (for example a trial-entry date)
+
+# and so are the rules
+rules = lot.LineRules(restart_gap_days=90, progression_aware=True, pre_index="line_zero")
+lot.derive(crc, index="advanced", rules=rules)
+lot.derive(prostate, index="advanced", rules="prostate")   # ADT and first-generation antiandrogens as a backbone
+```
+
+How a line is formed (every setting has a default in `lot.LineRules` and is
+written into the output):
+
+- regimens that start before the index are excluded (or kept as line 0);
+- the first regimen with a line-defining agent on or after the index starts
+  line 1; a regimen starting within `combination_window_days` (28) of the
+  line start joins it as part of the initial combination;
+- a later regimen whose agents are all already in the line continues it
+  (maintenance, de-escalation or resumption after a holiday), unless the gap
+  since the last known administration exceeds `restart_gap_days`;
+- a regimen with a new agent starts the next line; with
+  `progression_aware=True` it does so only when a progression assessment
+  (imaging or oncologist note) falls between the current line's start and
+  the new regimen, and a switch without one continues the line;
+- LHRH agonists and antagonists (`backbone` role) and leucovorin
+  (`modulator`) never start or end a line and are recorded as components;
+  locally administered agents (intravesical BCG, valrubicin, and any regimen
+  whose released route is intravesical, intraperitoneal, intrapleural,
+  intralesional or intrathecal) are not lines of systemic therapy;
+- an investigational drug counts as a line-defining agent whose identity and
+  end date are masked, so two investigational regimens are two lines.
+
+Drug identities come from `resources/drug_vocabulary.csv`: every one of the
+205 drug labels released across the six cohorts is mapped to a canonical
+agent, a class and a role (`lot.load_vocabulary()`). The two schema
+generations spell eleven agents differently ("Gemcitabine Hydrochloride"
+versus "Gemcitabine HCL", "Leucovorin Calcium" versus "Leucovorin",
+"Tamoxifen Citrate" versus "Tamoxifen", and so on) and generation 2
+misspells goserelin; the vocabulary resolves all of them. Classes and roles
+were assigned by the package author and are kept in one reviewable table
+(`data-raw/build_drug_vocabulary.py`).
+
 Command line:
 
 ```powershell
@@ -157,6 +212,8 @@ geniekit download CRC --dest data/genie_bpc       # after approval
 geniekit inspect data/genie_bpc/CRC_v2.0-public   # table summary and column check
 geniekit crosswalk --validate                     # the harmonisation rules, checked against the dictionary
 geniekit harmonize data\genie_bpc\NSCLC_v2.0-public data\genie_bpc\BLADDER_v1.0-public --out data\harmonized
+geniekit lot data\genie_bpc\CRC_v2.0-public --index advanced --out data\lot_crc
+geniekit lot data\genie_bpc\Prostate_v1.0-public --rules prostate --progression-aware --out data\lot_prostate
 ```
 
 ## The six public releases
@@ -234,6 +291,7 @@ Regenerating the packaged metadata (requires network access, no Synapse login):
 ```powershell
 python data-raw/build_releases.py
 python data-raw/build_dictionary.py
+python data-raw/build_drug_vocabulary.py   # with GENIEKIT_DATA_DIR set, checks coverage of the released labels
 ```
 
 ## License

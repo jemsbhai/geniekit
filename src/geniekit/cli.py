@@ -12,7 +12,7 @@ from collections.abc import Sequence
 
 import pandas as pd
 
-from . import dictionary, harmonize, io, releases
+from . import dictionary, harmonize, io, lot, releases
 from ._version import __version__
 
 
@@ -191,6 +191,52 @@ def cmd_harmonize(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_lot(args: argparse.Namespace) -> int:
+
+    tables = ["patient", "cancer_index", "cancer_non_index", "regimen", "imaging", "med_onc"]
+    loaded = []
+    for path in args.paths:
+        try:
+            loaded.append(io.load_release(path, tables=tables, genomic=False))
+        except (FileNotFoundError, ValueError) as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+    index: object = args.index
+    if args.index_table:
+        index = pd.read_csv(args.index_table)
+    try:
+        rules = lot.PRESETS[args.rules]
+    except KeyError:
+        print(
+            f"error: unknown rules preset {args.rules!r}; expected one of {sorted(lot.PRESETS)}",
+            file=sys.stderr,
+        )
+        return 1
+    changes = {}
+    if args.combination_window is not None:
+        changes["combination_window_days"] = args.combination_window
+    if args.restart_gap is not None:
+        changes["restart_gap_days"] = args.restart_gap
+    if args.progression_aware:
+        changes["progression_aware"] = True
+    if args.pre_index:
+        changes["pre_index"] = args.pre_index
+    if changes:
+        rules = rules.with_(**changes, name=f"{rules.name}+custom")
+    try:
+        result = lot.derive_all(loaded, index=index, rules=rules, cancers=args.cancers)
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+    print(result)
+    _print_frame(result.summary())
+    if result.unknown_labels:
+        print(f"\ndrug labels not in the packaged vocabulary: {', '.join(result.unknown_labels)}")
+    folder = result.to_dir(args.out, compress=args.compress)
+    print(f"\nwritten to {folder}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="geniekit", description=__doc__.splitlines()[0])
     p.add_argument("--version", action="version", version=f"geniekit {__version__}")
@@ -265,6 +311,28 @@ def build_parser() -> argparse.ArgumentParser:
     ph.add_argument("--keep-original", action="store_true", help="keep renamed columns as <name>_orig")
     ph.add_argument("--no-genomic", action="store_true", help="skip genomic files")
     ph.set_defaults(func=cmd_harmonize)
+
+    pl = sub.add_parser("lot", help="derive lines of therapy from an index event the user chooses")
+    pl.add_argument("paths", nargs="+", help="release folders (one per cohort)")
+    pl.add_argument("--out", required=True, help="output directory")
+    pl.add_argument(
+        "--index",
+        default="advanced",
+        choices=list(lot.INDEX_EVENTS),
+        help="built-in index event (default: advanced disease)",
+    )
+    pl.add_argument(
+        "--index-table",
+        help="CSV with record_id, ca_seq and index_days (and optionally index_source); overrides --index",
+    )
+    pl.add_argument("--rules", default="default", help=f"rules preset: {', '.join(sorted(lot.PRESETS))}")
+    pl.add_argument("--combination-window", type=int, help="days within which added drugs join the line")
+    pl.add_argument("--restart-gap", type=int, help="same agents after a longer gap (days) start a new line")
+    pl.add_argument("--progression-aware", action="store_true", help="require a documented progression")
+    pl.add_argument("--pre-index", choices=["exclude", "line_zero"], help="handling of pre-index regimens")
+    pl.add_argument("--cancers", default="index", choices=["index", "non_index", "all"])
+    pl.add_argument("--compress", action="store_true", help="write .csv.gz")
+    pl.set_defaults(func=cmd_lot)
     return p
 
 

@@ -6,6 +6,17 @@ Keep a Changelog, and the project follows semantic versioning.
 ## [Unreleased]
 
 ### Added
+- `geniekit.lot`: lines of therapy from the regimen tables, counted from an
+  index event the user chooses (`diagnosis`, `advanced`, `first_progression`,
+  `first_systemic`, or a custom table or callable), with explicit rules
+  (`LineRules`: combination window, maintenance and resumption, restart gap,
+  progression awareness, pre-index handling, backbone and excluded roles,
+  investigational drugs; presets `default`, `prostate`, `progression`),
+  three output tables (regimens with the reason for every assignment, lines,
+  cancers) and the settings written alongside them. CLI command `lot`.
+- Drug vocabulary (`resources/drug_vocabulary.csv`, `lot.load_vocabulary()`):
+  all 205 drug labels released across the six cohorts mapped to canonical
+  agents, classes and roles; built by `data-raw/build_drug_vocabulary.py`.
 - `geniekit.harmonize`: crosswalk (`resources/crosswalk.yaml`, 25 rules with
   their basis in the data guides), `harmonize()` with a provenance report,
   `stack()` with per-column cohort availability, derived `race_ethnicity`,

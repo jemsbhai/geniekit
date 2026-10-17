@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import warnings
 
 import pytest
@@ -122,3 +123,27 @@ def test_harmonize_command(tmp_path, capsys):
     assert "StackedData" in text and (out / "two" / "patient.csv.gz").exists()
     assert (out / "two" / "availability_cancer_index.csv").exists()
     assert cli.main(["harmonize", str(tmp_path / "missing"), "--out", str(out)]) == 1
+
+
+def test_lot_command(tmp_path, capsys):
+    from pathlib import Path
+
+    fixture = Path(__file__).parent / "fixtures" / "nsclc_sim"
+    out = tmp_path / "lot"
+    assert (
+        cli.main(["lot", str(fixture), "--out", str(out), "--index", "advanced", "--restart-gap", "90"]) == 0
+    )
+    text = capsys.readouterr().out
+    assert "LinesOfTherapy(NSCLC" in text and "written to" in text
+    assert (out / "lot_lines.csv").exists() and (out / "lot_settings.json").exists()
+    settings = json.loads((out / "lot_settings.json").read_text(encoding="utf-8"))
+    assert settings["rules"]["restart_gap_days"] == 90 and settings["rules"]["name"] == "default+custom"
+    # a custom index table and the other options
+    table = tmp_path / "index.csv"
+    table.write_text("record_id,ca_seq,index_days\nGENIE-TEST-0005,2,100\n", encoding="utf-8")
+    args = ["lot", str(fixture), "--out", str(out / "custom"), "--index-table", str(table)]
+    args += ["--rules", "progression", "--pre-index", "line_zero", "--combination-window", "14", "--compress"]
+    assert cli.main(args) == 0
+    assert (out / "custom" / "lot_lines.csv.gz").exists()
+    assert cli.main(["lot", str(fixture), "--out", str(out), "--rules", "nope"]) == 1
+    assert cli.main(["lot", str(fixture / "missing"), "--out", str(out)]) == 1

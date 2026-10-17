@@ -59,7 +59,7 @@ package-dir = { "" = "src" }
 where = ["src"]
 
 [tool.setuptools.package-data]
-geniekit = ["resources/*.json", "resources/*.csv.gz", "resources/*.yaml"]
+geniekit = ["resources/*.json", "resources/*.csv", "resources/*.csv.gz", "resources/*.yaml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
