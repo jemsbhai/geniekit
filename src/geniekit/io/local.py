@@ -188,14 +188,17 @@ def _validate_columns(data: CohortData) -> dict[str, dict[str, list[str]]]:
     report: dict[str, dict[str, list[str]]] = {}
     for name, frame in data.clinical.items():
         dict_table = "cancer" if name in ("cancer_index", "cancer_non_index") else name
-        declared = set(dd.variables(data.cohort, dict_table)["variable"])
+        rows = dd.variables(data.cohort, dict_table)
+        declared = set(rows["variable"])
         if not declared:
             continue
+        known_absent = set(rows.loc[~rows["released"], "variable"])
         actual = set(frame.columns)
-        missing = sorted(declared - actual)
+        missing = sorted(declared - actual - known_absent)
+        not_released = sorted((declared - actual) & known_absent)
         extra = sorted(actual - declared)
-        if missing or extra:
-            report[name] = {"missing": missing, "extra": extra}
+        if missing or extra or not_released:
+            report[name] = {"missing": missing, "extra": extra, "not_released": not_released}
     return report
 
 
@@ -204,7 +207,8 @@ def _validation_warning(report: dict[str, dict[str, list[str]]]) -> str | None:
 
     The synopsis describes the index and non-index cancer files together, so
     each of those files legitimately lacks the other's columns; only
-    unexpected columns are reported for them.
+    unexpected columns are reported for them. Variables the dictionary records
+    as declared but not released (``not_released``) are not warned about.
     """
     parts = []
     for table, r in report.items():

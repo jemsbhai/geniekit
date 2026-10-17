@@ -1,0 +1,108 @@
+{
+ "checked_on": "2026-10-17",
+ "method": "Column names of every released clinical file of the six public BPC releases (downloaded with geniekit.io.download_release) compared with the variables the Variable Synopsis declares for that table. Every released column is declared; the variables listed here are declared but absent from the released file. The index and non-index cancer files together hold every declared cancer variable in all six cohorts.",
+ "declared_not_released": [
+  {
+   "cohort": "NSCLC",
+   "version": "v2.0-public",
+   "table": "cpt",
+   "variable": "cpt_report_post_last_alive"
+  },
+  {
+   "cohort": "CRC",
+   "version": "v2.0-public",
+   "table": "tumor_marker",
+   "variable": "tm_result_out_of_range"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist31"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist32"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist33"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist34"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist35"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist36"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist37"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist38"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist39"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist40"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist41"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist42"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist43"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist44"
+  },
+  {
+   "cohort": "BrCa",
+   "version": "v1.0-public",
+   "table": "pathology",
+   "variable": "path_ca_ishist45"
+  }
+ ]
+}

@@ -40,11 +40,21 @@ class FakeResponse:
 class FakeHttp:
     """Routes requests to canned responses; records calls."""
 
-    def __init__(self, approved=True, restricted=False, content=b"record_id\nGENIE-TEST-1\n", bad_md5=False):
+    def __init__(
+        self,
+        approved=True,
+        restricted=False,
+        content=b"record_id\nGENIE-TEST-1\n",
+        bad_md5=False,
+        download_statuses=(),
+    ):
         self.approved = approved
         self.restricted = restricted
         self.content = content
         self.bad_md5 = bad_md5
+        # HTTP statuses the signed URL answers with, in order; 200 once the list is exhausted
+        self.download_statuses = list(download_statuses)
+        self.n_urls = 0
         self.calls: list[tuple[str, str]] = []
 
     def _handle(self):
@@ -62,6 +72,10 @@ class FakeHttp:
         self.calls.append(("GET", url))
         if headers is None or "Authorization" not in headers:
             # pre-signed download URL: no auth header
+            if self.download_statuses:
+                status = self.download_statuses.pop(0)
+                if status != 200:
+                    return FakeResponse(status, text="AccessDenied")
             return FakeResponse(content=self.content)
         if headers["Authorization"] != f"Bearer {TOKEN}":
             return FakeResponse(401, text="unauthorized")
@@ -96,10 +110,14 @@ class FakeHttp:
                 }
             )
         if url.endswith("/fileHandle/batch"):
+            self.n_urls += 1
             return FakeResponse(
                 payload={
                     "requestedFiles": [
-                        {"preSignedURL": "https://example.invalid/presigned", "fileHandle": self._handle()}
+                        {
+                            "preSignedURL": f"https://example.invalid/presigned/{self.n_urls}",
+                            "fileHandle": self._handle(),
+                        }
                     ]
                 }
             )
@@ -151,17 +169,80 @@ def test_download_file_verifies_md5(tmp_path):
     # second call with a matching checksum does not re-download
     n_calls = len(http.calls)
     s.download_file("syn1", tmp_path)
-    assert not any(c == ("GET", "https://example.invalid/presigned") for c in http.calls[n_calls:])
+    assert not any(c[0] == "GET" and "/presigned/" in c[1] for c in http.calls[n_calls:])
     # explicit path target
     path2, _ = s.download_file("syn1", tmp_path / "sub" / "renamed.csv")
     assert path2.name == "renamed.csv" and path2.exists()
 
 
-def test_download_file_md5_mismatch_removes_file(tmp_path):
-    s = SynapseSession(TOKEN, http=FakeHttp(bad_md5=True))
-    with pytest.raises(SynapseError, match="MD5 mismatch"):
-        s.download_file("syn1", tmp_path)
+def test_download_file_md5_mismatch_is_retried_then_removed(tmp_path, monkeypatch):
+    monkeypatch.setattr(synapse.time, "sleep", lambda _: None)
+    http = FakeHttp(bad_md5=True)
+    s = SynapseSession(TOKEN, http=http)
+    with pytest.raises(SynapseError, match=r"failed after 2 attempt.*MD5 mismatch"):
+        s.download_file("syn1", tmp_path, max_attempts=2)
     assert not (tmp_path / "patient_level_dataset.csv").exists()
+    assert http.n_urls == 2
+
+
+def test_download_file_retries_transient_refusals_with_a_fresh_url(tmp_path, monkeypatch):
+    sleeps: list[float] = []
+    monkeypatch.setattr(synapse.time, "sleep", sleeps.append)
+    http = FakeHttp(download_statuses=[403, 503, 200])
+    s = SynapseSession(TOKEN, http=http)
+    path, _ = s.download_file("syn1", tmp_path, backoff=0.5)
+    assert path.read_bytes() == http.content
+    urls = [c[1] for c in http.calls if c[0] == "GET" and "/presigned/" in c[1]]
+    assert urls == [f"https://example.invalid/presigned/{i}" for i in (1, 2, 3)]  # a new URL per attempt
+    assert sleeps == [0.5, 1.0]  # exponential backoff between attempts
+
+
+def test_download_file_gives_up_after_max_attempts(tmp_path, monkeypatch):
+    monkeypatch.setattr(synapse.time, "sleep", lambda _: None)
+    s = SynapseSession(TOKEN, http=FakeHttp(download_statuses=[403, 403, 403]))
+    with pytest.raises(SynapseError, match="failed after 3 attempt"):
+        s.download_file("syn1", tmp_path, max_attempts=3)
+    assert not (tmp_path / "patient_level_dataset.csv").exists()
+    # a non-transient status is not retried
+    http = FakeHttp(download_statuses=[404])
+    with pytest.raises(SynapseError, match="HTTP 404"):
+        SynapseSession(TOKEN, http=http).download_file("syn1", tmp_path)
+    assert http.n_urls == 1
+
+
+def test_download_release_records_failures_and_continues(tmp_path, monkeypatch):
+    monkeypatch.setattr(synapse.time, "sleep", lambda _: None)
+    # the first file (patient) is refused on every attempt; the second (cpt) succeeds
+    http = FakeHttp(download_statuses=[403] * 5)
+    s = SynapseSession(TOKEN, http=http)
+    messages: list[str] = []
+    folder = s.download_release(
+        "crc", dest=tmp_path, groups=["clinical"], names=["patient", "cpt"], progress=messages.append
+    )
+    manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
+    assert [f["name"] for f in manifest["files"]] == ["cpt"]
+    assert [f["name"] for f in manifest["failed"]] == ["patient"]
+    assert (
+        manifest["failed"][0]["synapse_id"] == "syn39802589" and "5 attempt" in manifest["failed"][0]["error"]
+    )
+    assert any(m.startswith("  failed:") for m in messages)
+    # strict mode raises after trying every file, with the manifest already written
+    http = FakeHttp(download_statuses=[403] * 5)
+    with pytest.raises(
+        SynapseError, match=r"1 file\(s\) of CRC v2.0-public could not be downloaded: patient_level"
+    ):
+        SynapseSession(TOKEN, http=http).download_release(
+            "crc",
+            dest=tmp_path / "strict",
+            groups=["clinical"],
+            names=["patient", "cpt"],
+            progress=None,
+            strict=True,
+        )
+    strict_manifest = json.loads(
+        (tmp_path / "strict" / "CRC_v2.0-public" / "manifest.json").read_text(encoding="utf-8")
+    )
+    assert [f["name"] for f in strict_manifest["files"]] == ["cpt"]
 
 
 def test_restricted_file_raises_access_denied(tmp_path):

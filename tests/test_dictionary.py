@@ -131,3 +131,16 @@ def test_lookup_without_table_spans_tables(dd):
 def test_constructor_validates_columns():
     with pytest.raises(ValueError, match="lacks columns"):
         dictionary.DataDictionary(pd.DataFrame({"cohort": []}))
+
+
+def test_declared_not_released(dd):
+    nr = dd.declared_not_released()
+    assert len(nr) == 17 and set(nr["cohort"]) == {"NSCLC", "CRC", "BrCa"}
+    assert set(nr.loc[nr["cohort"] == "BrCa", "variable"]) == {f"path_ca_ishist{i}" for i in range(31, 46)}
+    assert dd.frame["released"].sum() == len(dd.frame) - 17
+    # the record says when and how it was established
+    meta = dictionary.released_columns()
+    assert meta["checked_on"] == "2026-10-17" and "Variable Synopsis" in meta["method"]
+    # a dictionary built without the flag treats everything as released
+    plain = dictionary.DataDictionary(dd.frame.drop(columns="released"))
+    assert plain.declared_not_released().empty

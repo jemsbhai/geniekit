@@ -12,7 +12,10 @@ from collections.abc import Callable
 import numpy as np
 import pandas as pd
 
-__all__ = ["METHODS", "pfs_time_origin", "race_ethnicity", "seer_summary_stage"]
+from geniekit import dictionary
+from geniekit.releases import normalize_cohort
+
+__all__ = ["METHODS", "RACE_ETHNICITY_RULES", "pfs_time_origin", "race_ethnicity", "seer_summary_stage"]
 
 SEER_SUMMARY_STAGE_LABELS: dict[int, str] = {
     0: "In situ",
@@ -56,19 +59,27 @@ RACE_ETHNICITY_LEVELS: tuple[str, ...] = (
     "Unknown",
 )
 
+AAAPI = "AAAPI (Asian, Asian American, and Pacific Islander)"
 _HISPANIC = {"spanish/hispanic"}
 _NON_HISPANIC = {"non-spanish/non-hispanic"}
-_RACE_TO_GROUP = {
-    "white": "Non-Hispanic White",
-    "black": "Non-Hispanic Black",
-    "asian": "AAAPI (Asian, Asian American, and Pacific Islander)",
-    "pacific islander": "AAAPI (Asian, Asian American, and Pacific Islander)",
+_RACE_GROUP = {
+    "white": "White",
+    "black": "Black",
+    "asian": AAAPI,
+    "pacific islander": AAAPI,
     "native american": "Other",
     "other": "Other",
 }
+RACE_ETHNICITY_RULES: tuple[str, ...] = ("genie", "conservative")
 
 PFS_ORIGIN_DIAGNOSIS = "diagnosis"
 PFS_ORIGIN_FIRST_METASTASIS = "first distant metastasis"
+
+
+def _is_released(cohort: str, table: str, variable: str) -> bool:
+    """Whether the packaged dictionary declares ``variable`` for this cohort and table."""
+    rows = dictionary.load().lookup(variable, table)
+    return bool((rows["cohort"] == normalize_cohort(cohort)).any())
 
 
 def _norm(value: object) -> str | None:
@@ -130,49 +141,72 @@ def seer_summary_stage(frame: pd.DataFrame, cohort: str) -> tuple[pd.DataFrame, 
     return out, detail
 
 
-def race_ethnicity(frame: pd.DataFrame, cohort: str) -> tuple[pd.DataFrame, str]:
-    """Derive a six-level race/ethnicity from the collapsed NAACCR codes.
+def _race_ethnicity_one(ethnicity: object, race: object, rule: str) -> str:
+    e, r = _norm(ethnicity), _norm(race)
+    group = _RACE_GROUP.get(r or "")
+    if rule == "conservative" and e in _HISPANIC:
+        return "Hispanic/Latinx"
+    if group is None:  # Unknown, Not collected, Not Applicable, missing
+        return "Unknown"
+    if group in (AAAPI, "Other"):
+        return group
+    # White or Black: the ethnicity code decides
+    if e in _NON_HISPANIC:
+        return f"Non-Hispanic {group}"
+    if e is None:
+        return "Unknown"
+    if rule == "genie":
+        return "Hispanic/Latinx"  # any recorded origin code other than non-Hispanic, unknown included
+    return "Hispanic/Latinx" if e in _HISPANIC else "Unknown"
+
+
+def race_ethnicity(frame: pd.DataFrame, cohort: str, rule: str = "genie") -> tuple[pd.DataFrame, str]:
+    """Derive the six-level ``race_ethnicity`` from the collapsed NAACCR codes.
 
     Must run after the ethnicity and race collapses so that generation-1 codes
     are already in the generation-2 vocabulary.
+
+    ``rule="genie"`` (default) is the rule behind the released generation-1
+    variable, recovered from the NSCLC and CRC releases where it reproduces
+    every released value: the primary race code decides first (Asian and
+    Pacific Islander codes give AAAPI, Other and Native American give Other,
+    Unknown gives Unknown); for White and Black patients the ethnicity code
+    decides, and every recorded origin other than "Non-Spanish/non-Hispanic",
+    including "Unknown whether Spanish or not", gives Hispanic/Latinx. A
+    missing ethnicity code (not observed in generation 1) gives Unknown.
+
+    ``rule="conservative"`` differs in two places: an explicit Spanish/Hispanic
+    origin gives Hispanic/Latinx whatever the race code, and an unknown origin
+    with a White or Black race code gives Unknown rather than Hispanic/Latinx.
+
+    The generation-1 level "Asian Indian or Pakistani NOS" cannot be told apart
+    from other Asian codes in generation 2 and is folded into AAAPI everywhere.
     """
+    if rule not in RACE_ETHNICITY_RULES:
+        raise ValueError(f"rule must be one of {RACE_ETHNICITY_RULES}, got {rule!r}")
     eth_col, race_col, out_col = "naaccr_ethnicity_code", "naaccr_race_code_primary", "race_ethnicity"
     if eth_col not in frame.columns or race_col not in frame.columns:
         return frame, "skipped: NAACCR columns absent"
-    if f"{out_col}_released" in frame.columns or (
-        out_col in frame.columns
-        and set(frame[out_col].dropna()) <= set(RACE_ETHNICITY_LEVELS)
-        and "naaccr_ethnicity_code_detail" in frame.columns
-    ):
+    # Idempotence is decided from the dictionary, not from the values: where the
+    # cohort releases race_ethnicity (generation 1) the derivation has run once
+    # the released column has been moved to race_ethnicity_released; where it
+    # does not, the presence of race_ethnicity itself means it was derived.
+    is_released = _is_released(cohort, "patient", out_col)
+    if f"{out_col}_released" in frame.columns or (out_col in frame.columns and not is_released):
         return frame, "skipped: already derived"
     out = frame.copy()
     released = None
     if out_col in out.columns:
         released = out[out_col].copy()
         out = out.rename(columns={out_col: f"{out_col}_released"})
-    derived: list[str] = []
-    for eth, race in zip(out[eth_col], out[race_col], strict=True):
-        e, r = _norm(eth), _norm(race)
-        if e in _HISPANIC:
-            derived.append("Hispanic/Latinx")
-        elif r in _RACE_TO_GROUP:
-            derived.append(_RACE_TO_GROUP[r])
-        else:
-            derived.append("Unknown")
+    derived = [_race_ethnicity_one(e, r, rule) for e, r in zip(out[eth_col], out[race_col], strict=True)]
     pos = out.columns.get_loc(race_col) + 1
     out.insert(pos, out_col, pd.array(derived, dtype=object))
-    detail = "derived for all rows"
+    detail = f"derived for all rows (rule: {rule})"
     if released is not None:
         comparable = released.notna()
-        rel = (
-            released.astype(object)
-            .where(comparable, None)
-            .map(
-                lambda v: "AAAPI (Asian, Asian American, and Pacific Islander)"
-                if _norm(v) == "asian indian or pakistani nos"
-                else v
-            )
-        )
+        rel = released.astype(object).where(comparable, None)
+        rel = rel.map(lambda v: AAAPI if _norm(v) == "asian indian or pakistani nos" else v)
         agree = int(
             (rel[comparable].to_numpy() == np.array(derived, dtype=object)[comparable.to_numpy()]).sum()
         )

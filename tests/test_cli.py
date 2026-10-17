@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import warnings
+
 import pytest
 
 from geniekit import cli
@@ -47,10 +49,14 @@ def test_inspect_fixture(capsys):
     from pathlib import Path
 
     fixture = Path(__file__).parent / "fixtures" / "nsclc_sim"
-    with pytest.warns(UserWarning, match="cpt: 1 missing"):
+    with warnings.catch_warnings():
+        warnings.simplefilter(
+            "error"
+        )  # the fixture matches the dictionary once not-released columns are known
         assert cli.main(["inspect", str(fixture), "--no-genomic"]) == 0
     out = capsys.readouterr().out
     assert "CohortData(NSCLC v2.0-public" in out and "regimen" in out and "column differences" in out
+    assert "cpt: missing 0, unexpected 0, declared but not released 1" in out
     assert cli.main(["inspect", str(fixture / "missing")]) == 1
 
 

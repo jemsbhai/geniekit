@@ -115,12 +115,22 @@ def test_validation_report_and_warning(nsclc):
     # the simulated cancer_index lacks the non-index-only columns described by the synopsis
     assert "ca_heme_type" in report["cancer_index"]["missing"]
     assert report["cancer_index"]["extra"] == []
-    with pytest.warns(UserWarning, match="cpt: 1 missing"):
-        io.load_release(FIXTURE, tables=["patient", "cpt"])
+    # the simulated cpt table, like the released one, lacks cpt_report_post_last_alive, which the
+    # dictionary records as declared but not released: reported, not warned about
     with warnings.catch_warnings():
         warnings.simplefilter("error")
-        data = io.load_release(FIXTURE, tables=["patient", "cancer_index"], genomic=False)
-    assert data.validation["columns"].keys() == {"cancer_index"}
+        data = io.load_release(FIXTURE, tables=["patient", "cpt", "cancer_index"], genomic=False)
+    assert data.validation["columns"].keys() == {"cancer_index", "cpt"}
+    assert data.validation["columns"]["cpt"] == {
+        "missing": [],
+        "extra": [],
+        "not_released": ["cpt_report_post_last_alive"],
+    }
+    # a column that is declared, released and absent is warned about
+    data.tables["patient"] = data.tables["patient"].drop(columns=["naaccr_sex_code"])
+    report2 = local._validate_columns(data)
+    assert report2["patient"]["missing"] == ["naaccr_sex_code"]
+    assert local._validation_warning(report2) == "patient: 1 missing, 0 unexpected"
     assert local._validation_warning({"cancer_non_index": {"missing": ["a"], "extra": []}}) is None
     assert (
         local._validation_warning({"patient": {"missing": [], "extra": ["zzz"]}})

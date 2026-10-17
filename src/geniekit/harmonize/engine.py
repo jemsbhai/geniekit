@@ -298,7 +298,7 @@ def harmonize(
                     )
             elif rule.kind == "derive":
                 method = derive_methods.METHODS[rule.params["method"]]
-                out, detail = method(out, data.cohort)
+                out, detail = method(out, data.cohort, **(rule.params.get("options") or {}))
                 status = "skipped" if detail.startswith("skipped") else "applied"
                 report.add(
                     Record(

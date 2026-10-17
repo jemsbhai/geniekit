@@ -12,6 +12,34 @@ Keep a Changelog, and the project follows semantic versioning.
   `pfs_time_origin` and NAACCR summary-stage code/label, and unification of
   the two structural-variant formats and the copy-number matrix.
 - CLI commands `crosswalk` and `harmonize`.
+- `DataDictionary.declared_not_released()` and the packaged record
+  `resources/released_columns.json`: the 17 variables the Variable Synopses
+  declare that the released files do not contain (established on the six
+  releases on 2026-10-17). `load_release` reports them under
+  `validation["columns"][table]["not_released"]` instead of warning.
+
+### Changed
+- `SynapseSession.download_file` retries a refused download (HTTP 403, 408,
+  429 or 5xx, or an MD5 mismatch) with a fresh signed URL and exponential
+  backoff; Synapse's storage back end refuses a freshly signed URL now and
+  then. `download_release` continues past a file that still fails, records
+  it under `"failed"` in `manifest.json`, and raises only with `strict=True`.
+- The derived `race_ethnicity` now uses the rule behind the released
+  generation-1 variable, recovered from the NSCLC and CRC releases where it
+  reproduces every released value (1846/1846 and 1485/1485); the earlier rule
+  disagreed on 75 and 44 patients. The rule is selectable through the
+  crosswalk (`options.rule`: `genie` or `conservative`); see the rule's
+  basis and caveat.
+- Idempotence of the derivations is decided from the dictionary (whether the
+  cohort releases the variable), not from the values.
+
+### Fixed
+- The crosswalk and README said `naaccr_seer_sum_stage` is free text in
+  generation 1; the released files hold the numeric NAACCR code in all six
+  cohorts, and only the synopses differ.
+- Column validation on all six real releases: every released clinical column
+  is declared in the dictionary; the index and non-index cancer files together
+  hold every declared cancer variable.
 
 ## [0.0.1] - 2026-10-17
 

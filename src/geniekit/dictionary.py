@@ -29,6 +29,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import lru_cache
 from importlib import resources as importlib_resources
+from typing import Any
 
 import pandas as pd
 
@@ -40,6 +41,7 @@ __all__ = [
     "VariableComparison",
     "load",
     "normalize_level",
+    "released_columns",
 ]
 
 #: Logical table names in the order they appear in the synopses.
@@ -144,6 +146,9 @@ class DataDictionary:
         frame = frame.copy()
         if len(frame) and not isinstance(frame["values"].iloc[0], list):
             frame["values"] = [json.loads(v) if isinstance(v, str) and v else [] for v in frame["values"]]
+        if "released" not in frame.columns:
+            frame["released"] = True
+        frame["released"] = frame["released"].astype(bool)
         self._frame = frame.reset_index(drop=True)
         present = [c for c in COHORTS if c in set(self._frame["cohort"])]
         self.cohorts: tuple[str, ...] = tuple(present)
@@ -156,6 +161,18 @@ class DataDictionary:
 
     def tables(self) -> list[str]:
         return [t for t in TABLES if t in set(self._frame["table"])]
+
+    def declared_not_released(self) -> pd.DataFrame:
+        """Variables a Variable Synopsis declares that the released file does not contain.
+
+        Established by comparing the column names of the released clinical files
+        with the synopses (``resources/released_columns.json`` records when and
+        how); every released column is declared, so the difference runs one
+        way only.
+        """
+        f = self._frame
+        cols = ["cohort", "version", "table", "variable", "label", "dtype"]
+        return f.loc[~f["released"], cols].reset_index(drop=True)
 
     def schema_generation(self, cohort: str) -> int:
         c = normalize_cohort(cohort)
@@ -314,4 +331,22 @@ def load() -> DataDictionary:
     frame["schema_generation"] = frame["schema_generation"].astype(int)
     frame["n_values"] = frame["n_values"].astype(int)
     frame["order"] = frame["order"].astype(int)
+    frame["released"] = True
+    for item in released_columns()["declared_not_released"]:
+        mask = (
+            (frame["cohort"] == item["cohort"])
+            & (frame["table"] == item["table"])
+            & (frame["variable"] == item["variable"])
+        )
+        frame.loc[mask, "released"] = False
     return DataDictionary(frame)
+
+
+@lru_cache(maxsize=1)
+def released_columns() -> dict[str, Any]:
+    """The packaged record of declared-but-not-released variables.
+
+    See :meth:`DataDictionary.declared_not_released`.
+    """
+    path = importlib_resources.files("geniekit.resources").joinpath("released_columns.json")
+    return json.loads(path.read_text(encoding="utf-8"))

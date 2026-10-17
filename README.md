@@ -28,7 +28,7 @@ follow in the next minor releases.
 |---|---|---|
 | `geniekit.releases` | Registry of the six public BPC releases with the Synapse id of every clinical, genomic, cBioPortal and documentation file | done |
 | `geniekit.dictionary` | The six Variable Synopsis workbooks compiled into one data dictionary, with cross-cohort comparison helpers | done |
-| `geniekit.io` | Download from Synapse (personal access token, access-status check, MD5 verification) and load release folders from disk into one `CohortData` object | done |
+| `geniekit.io` | Download from Synapse (personal access token, access-status check, MD5 verification, retries) and load release folders from disk into one `CohortData` object, checked against the dictionary | done |
 | `geniekit.synthetic` | Dictionary-driven synthetic cohorts: every declared column, cohort-specific naming, coherent simulated histories | done |
 | `geniekit.harmonize` | Crosswalk-driven normalisation of the six cohorts (renames, code-list collapses, spelling, types, derived variables, genomic format unification) with a provenance report; stacking across cohorts | done; metastasis-site rederivation follows |
 | `geniekit.lot` | Line-of-therapy derivation with user-defined index events | planned |
@@ -123,10 +123,12 @@ the basis for each rule in the data guides):
   capitalisation, `<1` versus `< 1`);
 - converts `cpt_seq_date` to an integer year and `naaccr_seer_sum_stage` to
   the NAACCR #759 code plus label in every cohort;
-- derives `race_ethnicity` for every cohort with one rule (the released
-  generation-1 value is kept for comparison) and `pfs_time_origin`, which
-  states whether the PFS endpoints run from diagnosis or from the first
-  distant metastasis;
+- derives `race_ethnicity` for every cohort with the rule behind the released
+  generation-1 variable, recovered from the NSCLC and CRC releases where it
+  reproduces every released value (the released value is kept in
+  `race_ethnicity_released`; a conservative alternative is selectable in the
+  crosswalk), and `pfs_time_origin`, which states whether the PFS endpoints
+  run from diagnosis or from the first distant metastasis;
 - unifies `data_fusions.txt` and `data_sv.txt` into one structural-variant
   schema and melts the copy-number matrix into a long table.
 
@@ -176,14 +178,17 @@ Synopses, 505 are declared in all six cohorts. Examples of what differs:
 
 - smoking history is `ca_lung_cigarette` in generation 1 and `ca_cigarette` in generation 2;
 - distant metastasis sites are `dmets_*` / `dx_to_dmets_*` (9 sites) in generation 1 and `dist_mets_*` / `dx_to_dist_mets_*` (17 sites) in generation 2;
-- `naaccr_seer_sum_stage` is free text in generation 1 and a coded numeric field in generation 2;
+- `naaccr_seer_sum_stage` is declared as character in the generation-1 synopses and numeric in generation 2 (the released files hold the numeric NAACCR code in all six, so this one is a documentation difference);
 - `cpt_seq_date` is character in generation 1 and numeric in generation 2;
 - `ca_grade`, `pfs_cohort`, `ca_heme_type`, `ca_clin_t_stage` and others have different permitted value sets;
 - tumor-marker tables exist only for CRC, BrCa, PANC and Prostate; radiation-therapy tables only for PANC, Prostate and BLADDER;
 - structural variants are `data_fusions.txt` in generation 1 and `data_sv.txt` in generation 2;
 - UHN contributes to NSCLC, PANC, Prostate and BLADDER but not to CRC or BrCa.
 
-`geniekit dictionary diff` lists every such difference.
+`geniekit dictionary diff` lists every such difference. The dictionary also
+records the 17 variables the synopses declare that the released files do not
+contain (`dictionary.load().declared_not_released()`); every released
+clinical column is declared, so the loader's column check is exact.
 
 ## Data access
 

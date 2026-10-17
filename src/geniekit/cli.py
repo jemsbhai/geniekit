@@ -124,7 +124,11 @@ def cmd_inspect(args: argparse.Namespace) -> int:
     if report:
         print("\ncolumn differences versus the packaged dictionary:")
         for table, r in report.items():
-            print(f"  {table}: missing {len(r['missing'])}, unexpected {len(r['extra'])}")
+            not_released = r.get("not_released") or []
+            print(
+                f"  {table}: missing {len(r['missing'])}, unexpected {len(r['extra'])}, "
+                f"declared but not released {len(not_released)}"
+            )
             if r["extra"]:
                 print("    unexpected: " + ", ".join(r["extra"][:15]))
     return 0

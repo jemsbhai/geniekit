@@ -23,6 +23,7 @@ import datetime as dt
 import hashlib
 import json
 import os
+import time
 from collections.abc import Callable, Iterable
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -46,6 +47,8 @@ __all__ = [
 
 REPO_ENDPOINT = "https://repo-prod.prod.sagebase.org/repo/v1"
 FILE_ENDPOINT = "https://file-prod.prod.sagebase.org/file/v1"
+# responses that are retried with a fresh signed URL (transient storage-side refusals)
+RETRY_STATUSES = frozenset({403, 408, 429, 500, 502, 503, 504})
 GENIE_ACCESS_REQUIREMENT = "9606645"
 GENIE_REQUEST_ACCESS_URL = "https://www.synapse.org/Synapse:syn27056700"
 
@@ -223,32 +226,59 @@ class SynapseSession:
 
     # -- downloads -----------------------------------------------------------
     def download_file(
-        self, synapse_id: str, dest: str | Path, overwrite: bool = False
+        self,
+        synapse_id: str,
+        dest: str | Path,
+        overwrite: bool = False,
+        max_attempts: int = 5,
+        backoff: float = 1.0,
     ) -> tuple[Path, dict[str, Any]]:
-        """Download one file to ``dest`` (a directory or a full path); verify its MD5."""
+        """Download one file to ``dest`` (a directory or a full path); verify its MD5.
+
+        Synapse issues short-lived signed URLs for its storage back end, and a
+        freshly issued URL is occasionally answered with HTTP 403 (observed in
+        practice) or a transient 5xx. Such responses, and an MD5 mismatch, are
+        retried with a new signed URL up to ``max_attempts`` times with
+        exponential backoff starting at ``backoff`` seconds. Other HTTP errors
+        raise immediately.
+        """
         handle = self.file_handle(synapse_id)
-        url, handle2 = self.presigned_url(synapse_id, handle["id"])
-        handle = {**handle, **handle2}
         dest = Path(dest)
         target = dest / handle["fileName"] if dest.is_dir() or not dest.suffix else dest
         target.parent.mkdir(parents=True, exist_ok=True)
+        url, handle2 = self.presigned_url(synapse_id, handle["id"])
+        handle = {**handle, **handle2}
         expected_md5 = handle.get("contentMd5")
         if target.exists() and not overwrite and expected_md5 and _md5(target) == expected_md5:
             return target, handle
-        with self.http.get(url, stream=True, timeout=self.timeout) as resp:
-            status = getattr(resp, "status_code", 200)
-            if status >= 400:
-                raise SynapseError(f"Download of {synapse_id} failed with HTTP {status}")
-            digest = hashlib.md5()
-            with open(target, "wb") as fh:
-                for chunk in resp.iter_content(chunk_size=1 << 20):
-                    if chunk:
-                        fh.write(chunk)
-                        digest.update(chunk)
-        if expected_md5 and digest.hexdigest() != expected_md5:
-            target.unlink(missing_ok=True)
-            raise SynapseError(f"MD5 mismatch for {synapse_id} ({handle['fileName']}); download removed")
-        return target, handle
+        attempts = max(1, int(max_attempts))
+        failure = ""
+        for attempt in range(1, attempts + 1):
+            if attempt > 1:
+                time.sleep(backoff * 2 ** (attempt - 2))
+                url, handle2 = self.presigned_url(synapse_id, handle["id"])
+                handle = {**handle, **handle2}
+                expected_md5 = handle.get("contentMd5")
+            with self.http.get(url, stream=True, timeout=self.timeout) as resp:
+                status = getattr(resp, "status_code", 200)
+                if status in RETRY_STATUSES:
+                    failure = f"HTTP {status}"
+                    continue
+                if status >= 400:
+                    raise SynapseError(f"Download of {synapse_id} failed with HTTP {status}")
+                digest = hashlib.md5()
+                with open(target, "wb") as fh:
+                    for chunk in resp.iter_content(chunk_size=1 << 20):
+                        if chunk:
+                            fh.write(chunk)
+                            digest.update(chunk)
+            if expected_md5 and digest.hexdigest() != expected_md5:
+                target.unlink(missing_ok=True)
+                failure = "MD5 mismatch"
+                continue
+            return target, handle
+        name = handle.get("fileName", "?")
+        raise SynapseError(f"Download of {synapse_id} ({name}) failed after {attempts} attempt(s): {failure}")
 
     def download_release(
         self,
@@ -259,12 +289,18 @@ class SynapseSession:
         names: Iterable[str] | None = None,
         overwrite: bool = False,
         progress: Callable[[str], None] | None = print,
+        strict: bool = False,
     ) -> Path:
         """Download the files of one release into ``dest/<cohort>_<version>/<group>/``.
 
         Returns the release folder, which :func:`geniekit.io.load_release`
         accepts directly. A ``manifest.json`` records Synapse ids, file handle
-        ids, MD5 checksums and sizes.
+        ids, MD5 checksums and sizes of the downloaded files, and under
+        ``"failed"`` any file that could not be downloaded after the retries
+        in :meth:`download_file`. Failures do not stop the other files; with
+        ``strict=True`` they raise :class:`SynapseError` once every file has
+        been tried (the manifest is written first). An access failure
+        (:class:`AccessDeniedError`) always raises.
         """
         rel = release if isinstance(release, Release) else get_release(release, version)
         base = Path(dest or os.environ.get("GENIEKIT_DATA_DIR") or Path("data") / "genie_bpc")
@@ -274,6 +310,7 @@ class SynapseSession:
         if not status.approved:
             raise AccessDeniedError(status.describe())
         downloaded: list[DownloadedFile] = []
+        failed: list[dict[str, str]] = []
         order = {n: i for i, n in enumerate((*CLINICAL_TABLES, *GENOMIC_TABLES))}
         for group in groups:
             refs = sorted(rel.files_in(group).items(), key=lambda kv: (order.get(kv[0], len(order)), kv[0]))
@@ -283,9 +320,25 @@ class SynapseSession:
                 target_dir = folder / group
                 if progress:
                     progress(f"{rel.label}: {group}/{ref.filename} ({ref.synapse_id})")
-                path, handle = self.download_file(
-                    ref.synapse_id, target_dir / ref.filename, overwrite=overwrite
-                )
+                try:
+                    path, handle = self.download_file(
+                        ref.synapse_id, target_dir / ref.filename, overwrite=overwrite
+                    )
+                except AccessDeniedError:
+                    raise
+                except SynapseError as exc:
+                    failed.append(
+                        {
+                            "name": name,
+                            "group": group,
+                            "filename": ref.filename,
+                            "synapse_id": ref.synapse_id,
+                            "error": str(exc),
+                        }
+                    )
+                    if progress:
+                        progress(f"  failed: {exc}")
+                    continue
                 downloaded.append(
                     DownloadedFile(
                         name=name,
@@ -304,9 +357,15 @@ class SynapseSession:
             "release_folder": rel.release_folder,
             "downloaded_on": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
             "files": [asdict(f) for f in downloaded],
+            "failed": failed,
         }
         folder.mkdir(parents=True, exist_ok=True)
         (folder / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        if failed and strict:
+            names_failed = ", ".join(f["filename"] for f in failed)
+            raise SynapseError(
+                f"{len(failed)} file(s) of {rel.label} could not be downloaded: {names_failed}"
+            )
         return folder
 
 
@@ -327,8 +386,16 @@ def download_release(
     names: Iterable[str] | None = None,
     overwrite: bool = False,
     progress: Callable[[str], None] | None = print,
+    strict: bool = False,
 ) -> Path:
     """Convenience wrapper: ``SynapseSession(token).download_release(...)``."""
     return SynapseSession(token).download_release(
-        cohort, version=version, dest=dest, groups=groups, names=names, overwrite=overwrite, progress=progress
+        cohort,
+        version=version,
+        dest=dest,
+        groups=groups,
+        names=names,
+        overwrite=overwrite,
+        progress=progress,
+        strict=strict,
     )

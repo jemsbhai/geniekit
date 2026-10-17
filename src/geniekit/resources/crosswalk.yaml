@@ -328,11 +328,15 @@ rules:
     method: seer_summary_stage
     outputs: [naaccr_seer_sum_stage, naaccr_seer_sum_stage_label]
     basis: >
-      NAACCR #759 General Summary Stage. Generation 1 releases the registry text
-      as free text; generation 2 releases the one-digit code. The method keeps
-      the code (0, 1, 2, 3, 4, 5, 7, 8, 9) as a nullable integer, mapping
-      recognised code text or labels, and adds the standard label; unmatched
-      free text is kept in naaccr_seer_sum_stage_detail.
+      NAACCR #759 General Summary Stage. The generation-1 Variable Synopses
+      declare the variable as character and the generation-2 synopses as
+      numeric, but the released files hold the one-digit code in all six
+      cohorts (checked on the NSCLC and CRC v2.0-public files: codes 1, 2, 3,
+      4, 5, 7, 9 and missing, no text). The method keeps the code (0, 1, 2, 3,
+      4, 5, 7, 8, 9) as a nullable integer in every cohort, also accepting the
+      code written as text or as its label, and adds the standard label in
+      naaccr_seer_sum_stage_label; a value it cannot read is kept in
+      naaccr_seer_sum_stage_detail.
 
   # ----------------------------------------------------------------- derived
   - id: race-ethnicity-derived
@@ -340,19 +344,29 @@ rules:
     table: patient
     cohorts: [NSCLC, CRC, BrCa, PANC, Prostate, BLADDER]
     method: race_ethnicity
+    options:
+      rule: genie
     outputs: [race_ethnicity, race_ethnicity_released]
+    caveat: unknown-origin-counts-as-hispanic
     basis: >
       race_ethnicity is released for NSCLC and CRC only, "defined based on
       naaccr_race_code_primary and naaccr_ethnicity_code" (the guides do not
-      print the rule). geniekit derives it for every cohort with one rule over
-      the collapsed codes: Spanish/Hispanic origin gives Hispanic/Latinx;
-      otherwise White gives Non-Hispanic White, Black gives Non-Hispanic Black,
-      Asian or Pacific Islander gives AAAPI, Native American or Other gives
-      Other, and Unknown or Not collected gives Unknown. Because generation 2
+      print the rule). The rule was recovered from the two releases, where it
+      reproduces every released value (NSCLC 1846/1846, CRC 1485/1485): the
+      primary race code decides first (the NAACCR Asian and Pacific Islander
+      codes give AAAPI, Other and American Indian give Other, Unknown gives
+      Unknown), and for White and Black patients the ethnicity code decides,
+      where every origin other than "Non-Spanish; non-Hispanic" gives
+      Hispanic/Latinx. That includes "Unknown whether Spanish or not" (47 NSCLC
+      and 17 CRC patients), which is the caveat. geniekit applies the same rule
+      to every cohort over the collapsed codes so that the six cohorts share
+      one definition; the released generation-1 value is kept in
+      race_ethnicity_released and the report states the agreement. Setting
+      options.rule to "conservative" instead gives Hispanic/Latinx only for an
+      explicit Spanish/Hispanic origin (whatever the race code) and Unknown for
+      an unknown origin with a White or Black race code. Because generation 2
       cannot distinguish Asian Indian or Pakistani from other Asian codes, that
-      generation-1 level is folded into AAAPI for every cohort. The released
-      generation-1 value is kept in race_ethnicity_released so the rule can be
-      checked against it.
+      generation-1 level is folded into AAAPI for every cohort.
 
   - id: pfs-time-origin
     kind: derive

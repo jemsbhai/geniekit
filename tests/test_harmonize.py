@@ -8,6 +8,7 @@ import pytest
 
 from geniekit import dictionary, harmonize, io, releases, synthetic
 from geniekit.harmonize import derive, genomic
+from geniekit.harmonize.derive import AAAPI
 
 FIXTURE = Path(__file__).parent / "fixtures" / "nsclc_sim"
 
@@ -181,7 +182,8 @@ def test_seer_summary_stage_parses_text_forms():
     assert "unmapped 1 value(s): mystery" in detail
 
 
-def test_race_ethnicity_rule():
+def test_race_ethnicity_rules():
+    # the seven cases that separate the released GENIE rule from the conservative one
     frame = pd.DataFrame(
         {
             "naaccr_ethnicity_code": [
@@ -190,13 +192,31 @@ def test_race_ethnicity_rule():
                 "Unknown",
                 "Non-Spanish/non-Hispanic",
                 None,
+                "Spanish/Hispanic",
+                "Unknown",
+                "Spanish/Hispanic",
+                None,
             ],
-            "naaccr_race_code_primary": ["White", "Asian", "Black", "Native American", None],
+            "naaccr_race_code_primary": [
+                "White",
+                "Asian",
+                "Black",
+                "Native American",
+                None,
+                "Other",
+                "Asian",
+                "Unknown",
+                "White",
+            ],
             "race_ethnicity": [
                 "Hispanic/Latinx",
                 "Asian Indian or Pakistani NOS",
-                "Non-Hispanic Black",
+                "Hispanic/Latinx",
                 "Other",
+                None,
+                "Other",
+                AAAPI,
+                "Unknown",
                 None,
             ],
         }
@@ -204,13 +224,51 @@ def test_race_ethnicity_rule():
     out, detail = derive.race_ethnicity(frame, "NSCLC")
     assert out["race_ethnicity"].tolist() == [
         "Hispanic/Latinx",
-        "AAAPI (Asian, Asian American, and Pacific Islander)",
-        "Non-Hispanic Black",
+        AAAPI,
+        "Hispanic/Latinx",  # unknown origin with a Black race code counts as Hispanic in the released rule
         "Other",
         "Unknown",
+        "Other",  # race Other takes precedence over a Hispanic origin
+        AAAPI,
+        "Unknown",
+        "Unknown",  # a missing origin code is not an origin code
     ]
     assert "race_ethnicity_released" in out.columns
-    assert "agreement with released value 4/4" in detail
+    assert "(rule: genie); agreement with released value 7/7" in detail
+    out2, detail2 = derive.race_ethnicity(frame, "NSCLC", rule="conservative")
+    assert out2["race_ethnicity"].tolist() == [
+        "Hispanic/Latinx",
+        AAAPI,
+        "Unknown",
+        "Other",
+        "Unknown",
+        "Hispanic/Latinx",
+        AAAPI,
+        "Hispanic/Latinx",
+        "Unknown",
+    ]
+    assert "agreement with released value 4/7" in detail2
+    with pytest.raises(ValueError, match="rule must be one of"):
+        derive.race_ethnicity(frame, "NSCLC", rule="other")
+    # idempotence: a generation-1 frame is recognised by race_ethnicity_released, a generation-2 frame
+    # (where the dictionary does not declare race_ethnicity) by the presence of the derived column
+    assert derive.race_ethnicity(out, "NSCLC")[1] == "skipped: already derived"
+    gen2 = frame.drop(columns="race_ethnicity")
+    derived, _ = derive.race_ethnicity(gen2, "BrCa")
+    assert "race_ethnicity_released" not in derived.columns
+    assert derive.race_ethnicity(derived, "BrCa")[1] == "skipped: already derived"
+    # the released generation-1 column is not mistaken for a derivation
+    assert derive.race_ethnicity(frame, "NSCLC")[1].startswith("derived")
+
+
+def test_race_ethnicity_rule_option_flows_from_the_crosswalk(raw):
+    cw = harmonize.load_crosswalk()
+    rule = next(r for r in cw.rules if r.id == "race-ethnicity-derived")
+    assert rule.params["options"] == {"rule": "genie"}
+    rule.params["options"] = {"rule": "conservative"}
+    h = harmonize.harmonize(raw["BrCa"], crosswalk=cw)
+    rec = h.report.to_frame().query("rule_id == 'race-ethnicity-derived'").iloc[0]
+    assert rec["status"] == "applied" and "(rule: conservative)" in rec["detail"]
 
 
 def test_report_contents(harmonised):
