@@ -5,4 +5,4 @@ MAJOR for breaking API changes, MINOR for backward-compatible features, PATCH
 for backward-compatible fixes.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.0.1"

@@ -19,7 +19,10 @@ GENIE access requirement (see [Data access](#data-access)).
 
 ## Status
 
-Version 0.1.0 is under development. Implemented so far:
+Version 0.0.1 is the first public release and contains the foundation: the
+release registry, the data dictionary, data loading and download, and the
+synthetic cohorts. The harmonisation, line-of-therapy and aggregate layers
+follow in the next minor releases.
 
 | Module | Purpose | State |
 |---|---|---|

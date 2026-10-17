@@ -1,0 +1,7 @@
+include README.md CHANGELOG.md NOTICE.md LICENSE MANIFEST.in
+recursive-include src/geniekit/resources *.json *.csv.gz
+recursive-include tests *.py *.md *.gz
+recursive-include data-raw *.py *.md
+recursive-include scripts *.py
+recursive-include examples *.py
+prune data-raw/cache

@@ -5,6 +5,10 @@ Keep a Changelog, and the project follows semantic versioning.
 
 ## [Unreleased]
 
+## [0.0.1] - 2026-10-17
+
+First public release: the foundation modules.
+
 ### Added
 - `geniekit.releases`: registry of the six public GENIE BPC releases (NSCLC
   v2.0, CRC v2.0, BrCa v1.0, PANC v1.0, Prostate v1.0, BLADDER v1.0) with the

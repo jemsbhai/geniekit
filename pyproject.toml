@@ -1,20 +1,20 @@
 [build-system]
-requires = ["setuptools>=69,<81", "wheel"]
+requires = ["setuptools>=77,<81"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "geniekit"
-version = "0.1.0"
+version = "0.0.1"
 description = "Harmonise the AACR Project GENIE BPC cohorts, compute lines of therapy, and run aggregate-only analyses."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE", "NOTICE.md"]
 authors = [{ name = "Muntaser Syed", email = "jemsbhai@gmail.com" }]
 keywords = ["AACR", "GENIE", "BPC", "oncology", "clinicogenomic", "line of therapy", "harmonization", "Synapse"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
